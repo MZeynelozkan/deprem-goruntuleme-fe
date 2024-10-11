@@ -3,10 +3,13 @@ import "./leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import LocationMarker from "./LocationMarker";
 import LeafletMapSmooth from "./LeafletMapSmooth";
+import { useState } from "react";
 
 const position: Position = [51.505, -0.09];
 
 const LeafletMap = () => {
+  const [isEditMode, setIsEditMode] = useState(false);
+
   return (
     <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
       <TileLayer
@@ -18,8 +21,8 @@ const LeafletMap = () => {
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker>
-      {/* <LocationMarker /> */}
-      <LeafletMapSmooth />
+      <LocationMarker />
+      {/* <LeafletMapSmooth /> */}
     </MapContainer>
   );
 };
