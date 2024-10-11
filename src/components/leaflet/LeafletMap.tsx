@@ -11,7 +11,7 @@ const LeafletMap = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   return (
-    <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+    <MapContainer scrollWheelZoom={true} center={position} zoom={13}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
