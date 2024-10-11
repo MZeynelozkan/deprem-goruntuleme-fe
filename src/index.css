@@ -1,0 +1,17 @@
+@import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
