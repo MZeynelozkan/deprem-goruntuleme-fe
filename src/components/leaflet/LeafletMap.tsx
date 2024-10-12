@@ -1,7 +1,7 @@
 import { Position } from "../../types/types";
 import "./leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
@@ -46,7 +46,21 @@ const LeafletMap = () => {
       />
       {/* Render markers only if cities exist */}
       {cities?.map((city) => (
-        <Marker key={city.name} position={[city.lat, city.lng]}>
+        <Marker
+          eventHandlers={{
+            click: () => {
+              const foundCity = data[0].cities.find(
+                (c) => c.name === city.name
+              );
+
+              const earthquakes = foundCity?.earthquakes;
+              console.log("Bulunan şehir:", foundCity);
+              console.log(earthquakes);
+            },
+          }}
+          key={city.name}
+          position={[city.lat, city.lng]}
+        >
           <Popup>
             {city.name} <br /> Latitude: {city.lat}, Longitude: {city.lng}
           </Popup>

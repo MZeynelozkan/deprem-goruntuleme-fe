@@ -29,7 +29,7 @@ const countries = [
   },
   {
     name: "Japonya",
-    lat: 36.2048, // Japonya'nın ortalama konumu (Tokyo baz alındı)
+    lat: 36.2048,
     lng: 138.2529,
     cities: [
       {
