@@ -1,7 +1,7 @@
 import { Position } from "../../types/types";
 import "./leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
@@ -38,7 +38,7 @@ const LeafletMap = () => {
       ref={mapRef}
       scrollWheelZoom={true}
       center={position}
-      zoom={13}
+      zoom={5}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
