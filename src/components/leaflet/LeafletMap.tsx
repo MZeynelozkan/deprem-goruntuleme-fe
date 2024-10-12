@@ -1,16 +1,13 @@
 import { Position } from "../../types/types";
 import "./leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import LocationMarker from "./LocationMarker";
-import LeafletMapSmooth from "./LeafletMapSmooth";
-import { useState, useEffect, useRef } from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/store/store";
 
 const position: Position = [51.505, -0.09];
 
 const LeafletMap = () => {
-  const [isEditMode, setIsEditMode] = useState(false);
   const data = useSelector((state: RootState) => state.data.data);
 
   let cities: any[] = [];
@@ -19,7 +16,7 @@ const LeafletMap = () => {
 
   if (data.length > 0) {
     const [country] = data;
-    const { name, cities: countryCities, lat, lng } = country;
+    const { cities: countryCities, lat, lng } = country;
     cities = countryCities;
     countryLat = lat;
     countryLng = lng;
@@ -55,9 +52,6 @@ const LeafletMap = () => {
           </Popup>
         </Marker>
       ))}
-
-      {/* <LocationMarker /> */}
-      {/* <LeafletMapSmooth /> */}
     </MapContainer>
   );
 };

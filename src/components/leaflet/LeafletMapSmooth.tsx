@@ -1,5 +1,3 @@
-import React from "react";
-import L from "leaflet";
 import { useMapEvent } from "react-leaflet";
 
 const LeafletMapSmooth = () => {

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setData } from "@/slices/dataSlice";
-import { RootState } from "@reduxjs/toolkit/query";
 
-export const countries = [
+const countries = [
   {
     name: "Türkiye",
     lat: 39.9334, // Türkiye'nin ortalama konumu (Ankara baz alındı)
@@ -96,9 +95,6 @@ export const countries = [
 const Navbar = () => {
   const [search, setSearch] = useState<string>("");
   const dispatch = useDispatch();
-
-  // RootState kullanarak tip güvenliğini sağladık
-  const data = useSelector((state: RootState) => state.data.data);
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
