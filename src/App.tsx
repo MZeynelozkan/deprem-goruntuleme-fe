@@ -9,9 +9,8 @@ function App() {
     <div>
       <Navbar />
       <div className="flex">
-        <LeftSideBar />
-        <LeafletMap />;
-        <RightSidebar />
+        {/* <LeftSideBar /> */}
+        <LeafletMap />;{/* <RightSidebar /> */}
       </div>
     </div>
   );

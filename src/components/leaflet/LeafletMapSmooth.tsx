@@ -7,7 +7,6 @@ const LeafletMapSmooth = () => {
     console.log(e.latlng);
     const { lat, lng } = e.latlng;
     map.setView([lat, lng], map.getZoom());
-    L.marker([lat, lng]).addTo(map);
   });
   return null;
 };

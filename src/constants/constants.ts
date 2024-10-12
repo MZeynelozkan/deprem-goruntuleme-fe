@@ -1,274 +1,87 @@
 export const countries = [
   {
-    name: "Afganistan",
-    cities: ["Kabil", "Kandahar", "Herat"],
-  },
-  {
-    name: "Arnavutluk",
-    cities: ["Tiran", "Dıraç", "Vlora"],
-  },
-  {
-    name: "Cezayir",
-    cities: ["Cezayir", "Oran", "Constantine"],
-  },
-  {
-    name: "Andorra",
-    cities: ["Andorra la Vella", "Escaldes-Engordany"],
-  },
-  {
-    name: "Angola",
-    cities: ["Luanda", "Benguela", "Huambo"],
-  },
-  {
-    name: "Arjantin",
-    cities: ["Buenos Aires", "Córdoba", "Rosario"],
-  },
-  {
-    name: "Avustralya",
-    cities: ["Sydney", "Melbourne", "Brisbane"],
-  },
-  {
-    name: "Avusturya",
-    cities: ["Viyana", "Salzburg", "Graz"],
-  },
-  {
-    name: "Azerbaycan",
-    cities: ["Bakü", "Gence", "Sumgayıt"],
-  },
-  {
-    name: "Bahama",
-    cities: ["Nassau", "Freeport"],
-  },
-  {
-    name: "Bahreyn",
-    cities: ["Manama", "Riffa"],
-  },
-  {
-    name: "Bangladeş",
-    cities: ["Dakha", "Chittagong", "Khulna"],
-  },
-  {
-    name: "Barbados",
-    cities: ["Bridgetown", "Holetown"],
-  },
-  {
-    name: "Belçika",
-    cities: ["Brüksel", "Antwerp", "Gent"],
-  },
-  {
-    name: "Bolivya",
-    cities: ["La Paz", "Santa Cruz", "Cochabamba"],
-  },
-  {
-    name: "Bosna-Hersek",
-    cities: ["Saraybosna", "Banja Luka", "Mostar"],
-  },
-  {
-    name: "Brezilya",
-    cities: ["Rio de Janeiro", "Sao Paulo", "Brasilia"],
-  },
-  {
-    name: "Bulgaristan",
-    cities: ["Sofya", "Plovdiv", "Varna"],
-  },
-  {
-    name: "Danimarka",
-    cities: ["Kopenhag", "Aarhus", "Odense"],
-  },
-  {
-    name: "Dominika",
-    cities: ["Roseau"],
-  },
-  {
-    name: "Dominik Cumhuriyeti",
-    cities: ["Santo Domingo", "Santiago", "La Romana"],
-  },
-  {
-    name: "Ekvador",
-    cities: ["Quito", "Guayaquil", "Cuenca"],
-  },
-  {
-    name: "El Salvador",
-    cities: ["San Salvador", "Santa Ana", "San Miguel"],
-  },
-  {
-    name: "Endonezya",
-    cities: ["Cakarta", "Surabaya", "Bandung"],
-  },
-  {
-    name: "Estonya",
-    cities: ["Tallinn", "Tartu", "Narva"],
-  },
-  {
-    name: "Fas",
-    cities: ["Rabat", "Casablanca", "Marrakech"],
-  },
-  {
-    name: "Fiji",
-    cities: ["Suva", "Nadi"],
-  },
-  {
-    name: "Finlandiya",
-    cities: ["Helsinki", "Espoo", "Tampere"],
-  },
-  {
-    name: "Fransa",
-    cities: ["Paris", "Lyon", "Marsilya"],
-  },
-  {
-    name: "Gana",
-    cities: ["Accra", "Kumasi", "Takoradi"],
-  },
-  {
-    name: "Gine",
-    cities: ["Conakry", "Nzérékoré"],
-  },
-  {
-    name: "Güney Afrika",
-    cities: ["Cape Town", "Johannesburg", "Durban"],
-  },
-  {
-    name: "Güney Kore",
-    cities: ["Seul", "Busan", "Incheon"],
-  },
-  {
-    name: "Hindistan",
-    cities: ["Delhi", "Mumbai", "Bangalore"],
-  },
-  {
-    name: "Hırvatistan",
-    cities: ["Zagreb", "Split", "Dubrovnik"],
-  },
-  {
-    name: "Honduras",
-    cities: ["Tegucigalpa", "San Pedro Sula"],
-  },
-  {
-    name: "Irak",
-    cities: ["Bağdat", "Basra", "Erbil"],
-  },
-  {
-    name: "İran",
-    cities: ["Tahran", "Isfahan", "Şiraz"],
-  },
-  {
-    name: "İngiltere",
-    cities: ["Londra", "Manchester", "Birmingham"],
-  },
-  {
-    name: "İspanya",
-    cities: ["Madrid", "Barselona", "Valencia"],
-  },
-  {
-    name: "İsrail",
-    cities: ["Tel Aviv", "Kudüs", "Haifa"],
-  },
-  {
-    name: "İsveç",
-    cities: ["Stockholm", "Göteborg", "Malmö"],
-  },
-  {
-    name: "İtalya",
-    cities: ["Roma", "Milano", "Napoli"],
+    name: "Türkiye",
+    lat: 39.9334, // Türkiye'nin ortalama konumu (Ankara baz alındı)
+    lng: 32.8597,
+    cities: [
+      {
+        name: "İstanbul",
+        lat: 41.0082,
+        lng: 28.9784,
+        earthquakes: [
+          { date: "2024-10-10", magnitude: 4.5 },
+          { date: "2024-08-25", magnitude: 3.2 },
+        ],
+      },
+      {
+        name: "Ankara",
+        lat: 39.9334,
+        lng: 32.8597,
+        earthquakes: [{ date: "2024-09-15", magnitude: 3.8 }],
+      },
+    ],
   },
   {
     name: "Japonya",
-    cities: ["Tokyo", "Osaka", "Kyoto"],
+    lat: 36.2048, // Japonya'nın ortalama konumu (Tokyo baz alındı)
+    lng: 138.2529,
+    cities: [
+      {
+        name: "Tokyo",
+        lat: 35.6762,
+        lng: 139.6503,
+        earthquakes: [
+          { date: "2024-10-05", magnitude: 5.1 },
+          { date: "2024-09-20", magnitude: 4.3 },
+        ],
+      },
+      {
+        name: "Osaka",
+        lat: 34.6937,
+        lng: 135.5023,
+        earthquakes: [{ date: "2024-07-30", magnitude: 3.9 }],
+      },
+    ],
   },
   {
-    name: "Kanada",
-    cities: ["Toronto", "Vancouver", "Montreal"],
-  },
-  {
-    name: "Karadağ",
-    cities: ["Podgorica", "Niksic"],
-  },
-  {
-    name: "Katar",
-    cities: ["Doha", "Al Wakrah"],
-  },
-  {
-    name: "Kazakhstan",
-    cities: ["Nur-Sultan", "Almatı"],
-  },
-  {
-    name: "Kırgızistan",
-    cities: ["Bişkek", "Oş"],
-  },
-  {
-    name: "Kıbrıs",
-    cities: ["Lefkoşa", "Girne"],
-  },
-  {
-    name: "Kolombiya",
-    cities: ["Bogota", "Medellin", "Cali"],
-  },
-  {
-    name: "Küba",
-    cities: ["Havana", "Santiago de Cuba"],
-  },
-  {
-    name: "Lübnan",
-    cities: ["Beyrut", "Tripoli"],
-  },
-  {
-    name: "Malavi",
-    cities: ["Lilongwe", "Blantyre"],
-  },
-  {
-    name: "Maldivler",
-    cities: ["Malé", "Addu City"],
-  },
-  {
-    name: "Malezya",
-    cities: ["Kuala Lumpur", "George Town"],
-  },
-  {
-    name: "Meksika",
-    cities: ["Mexico City", "Guadalajara", "Monterrey"],
-  },
-  {
-    name: "Nijerya",
-    cities: ["Lagos", "Abuja"],
-  },
-  {
-    name: "Norveç",
-    cities: ["Oslo", "Bergen", "Stavanger"],
-  },
-  {
-    name: "Portekiz",
-    cities: ["Lizbon", "Porto"],
-  },
-  {
-    name: "Rusya",
-    cities: ["Moskova", "St. Petersburg", "Novosibirsk"],
-  },
-  {
-    name: "Şili",
-    cities: ["Santiago", "Valparaíso"],
-  },
-  {
-    name: "Tayland",
-    cities: ["Bangkok", "Chiang Mai"],
-  },
-  {
-    name: "Türkiye",
-    cities: ["Ankara", "İstanbul", "İzmir"],
-  },
-  {
-    name: "Ukrayna",
-    cities: ["Kiev", "Lviv", "Odessa"],
+    name: "İtalya",
+    lat: 41.8719, // İtalya'nın ortalama konumu (Roma baz alındı)
+    lng: 12.5674,
+    cities: [
+      {
+        name: "Roma",
+        lat: 41.9028,
+        lng: 12.4964,
+        earthquakes: [{ date: "2024-09-10", magnitude: 4.0 }],
+      },
+      {
+        name: "Milano",
+        lat: 45.4642,
+        lng: 9.19,
+        earthquakes: [{ date: "2024-08-02", magnitude: 2.9 }],
+      },
+    ],
   },
   {
     name: "ABD",
-    cities: ["New York", "Los Angeles", "Chicago"],
-  },
-  {
-    name: "Zambiya",
-    cities: ["Lusaka", "Ndola"],
-  },
-  {
-    name: "Zimbabve",
-    cities: ["Harare", "Bulawayo"],
+    lat: 37.0902, // ABD'nin ortalama konumu (geniş coğrafya nedeniyle yaklaşık bir merkez)
+    lng: -95.7129,
+    cities: [
+      {
+        name: "Los Angeles",
+        lat: 34.0522,
+        lng: -118.2437,
+        earthquakes: [
+          { date: "2024-10-01", magnitude: 4.8 },
+          { date: "2024-09-12", magnitude: 3.5 },
+        ],
+      },
+      {
+        name: "San Francisco",
+        lat: 37.7749,
+        lng: -122.4194,
+        earthquakes: [{ date: "2024-09-29", magnitude: 5.2 }],
+      },
+    ],
   },
 ];
