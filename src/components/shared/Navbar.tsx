@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+
 import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setData } from "@/slices/dataSlice";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { setCurrentCity } from "@/slices/searchSlice";
 import { countries } from "@/constants/constants";
+import { Button } from "../ui/button";
 
 interface City {
   name: string;
@@ -58,6 +59,7 @@ const Navbar = () => {
 
   const [currentSelectedCountry, setCurrentSelectedCountry] =
     useState<Country | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
   const handleCountryChange = (selectedCountryName: string) => {
     const selectedCountry = countries.find(
@@ -67,9 +69,11 @@ const Navbar = () => {
       dispatch(setData([selectedCountry]));
       setCurrentSelectedCountry(selectedCountry);
       dispatch(setCurrentCity(null));
+      setSelectedCity(null); // Şehir seçimlerini sıfırla
       setSearch("");
     }
   };
+
   const handleCityChange = (selectedCityName: string) => {
     if (currentSelectedCountry) {
       const selectedCity = currentSelectedCountry.cities.find(
@@ -77,43 +81,54 @@ const Navbar = () => {
       );
 
       if (selectedCity) {
-        // Burada mevcut ülkenin içinde yalnızca seçilen şehri tutan yeni bir obje oluşturuyoruz
-        const updatedCountry = {
-          ...currentSelectedCountry,
-          cities: [selectedCity], // Sadece seçilen şehri içeren bir dizi oluştur
-        };
-
-        // Şehir ve ülke verisini dispatch et
-        dispatch(setData([updatedCountry])); // Ülkenin tüm verisini setData'ya gönder
-        dispatch(setCurrentCity(selectedCity)); // Mevcut şehri güncelle
+        setSelectedCity(selectedCity); // Seçilen şehri sakla
         setSearch(""); // Arama kutusunu temizle
       }
     }
   };
 
-  // Toggle the state when clicking on the SheetTrigger
+  const handleButtonClick = () => {
+    if (currentSelectedCountry) {
+      if (selectedCity) {
+        // Hem ülke hem şehir seçiliyse
+        const updatedCountry = {
+          ...currentSelectedCountry,
+          cities: [selectedCity], // Sadece seçilen şehri içeren bir dizi oluştur
+        };
+        dispatch(setData([updatedCountry]));
+        dispatch(setCurrentCity(selectedCity)); // Seçilen şehri dispatch et
+      } else {
+        // Sadece ülke seçiliyse
+        dispatch(setData([currentSelectedCountry]));
+        dispatch(setCurrentCity(null)); // Şehri null yap
+      }
+    }
+  };
 
   return (
-    <div className="flex items-center justify-center gap-4 p-8 sticky top-0 left-0 z-50 bg-red-500">
-      <div className="relative w-full max-w-[550px] flex items-center">
-        <FaSearch className="absolute top-1/2 right-4 -translate-y-1/2" />
-        <Input
+    <div className="flex items-center justify-center gap-4 p-8 sticky top-0 left-0 z-50 bg-gray-500">
+      <div className="relative w-full max-w-[650px] flex items-center bg-white rounded-sm px-3">
+        <input
           type="text"
           value={search}
           onChange={handleInputChange}
           onKeyDown={handleSearch}
           placeholder="Ülke Arama"
-          className="pl-5 w-full border-none h-[48px]"
+          className="pl-5 w-full h-12 border-0 shadow-none outline-none focus:outline-none focus:shadow-none focus:ring-0 placeholder-gray-400"
         />
+        <FaSearch />
       </div>
 
       <Sheet>
         <SheetTrigger>
           <RxHamburgerMenu className="h-6 w-6 sm:hidden" />
         </SheetTrigger>
-        <SheetContent>
-          <Select onValueChange={handleCountryChange}>
-            <SelectTrigger className="w-[180px] rounded-sm">
+        <SheetContent className="flex flex-col items-center gap-4">
+          <Select
+            value={currentSelectedCountry?.name || ""}
+            onValueChange={handleCountryChange}
+          >
+            <SelectTrigger className="w-full rounded-sm mt-5">
               <SelectValue placeholder="Countries" />
             </SelectTrigger>
             <SelectContent>
@@ -128,21 +143,25 @@ const Navbar = () => {
           {/* Şehir seçimi, sadece bir ülke seçildiyse göster */}
           {currentSelectedCountry &&
             currentSelectedCountry.cities.length > 0 && (
-              <Select onValueChange={handleCityChange}>
-                <SelectTrigger className="w-[180px] rounded-sm">
+              <Select
+                value={selectedCity?.name || ""}
+                onValueChange={handleCityChange}
+              >
+                <SelectTrigger className="w-full rounded-sm">
                   <SelectValue placeholder="Cities" />
                 </SelectTrigger>
                 <SelectContent>
                   {currentSelectedCountry.cities.map((city: City) => (
-                    <SheetClose>
-                      <SelectItem key={city.name} value={city.name}>
-                        {city.name}
-                      </SelectItem>
-                    </SheetClose>
+                    <SelectItem key={city.name} value={city.name}>
+                      {city.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             )}
+          <SheetClose asChild>
+            <Button onClick={handleButtonClick}>Search</Button>
+          </SheetClose>
         </SheetContent>
       </Sheet>
     </div>

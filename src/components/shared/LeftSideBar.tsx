@@ -48,7 +48,7 @@ const LeftSideBar = () => {
   };
 
   return (
-    <div className="bg-red-500 min-h-dvh w-[300px] absolute top-0 left-0 flex flex-col z-50 pt-32 items-center gap-8 max-sm:hidden">
+    <div className="bg-gray-500 min-h-dvh w-[300px] absolute top-0 left-0 flex flex-col z-50 pt-32 items-center gap-8 max-sm:hidden">
       {/* Country selection */}
       <Select onValueChange={handleCountryChange}>
         <SelectTrigger className="w-[180px] rounded-sm">
