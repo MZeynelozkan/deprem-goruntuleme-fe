@@ -1,4 +1,5 @@
 import LeafletMap from "./components/leaflet/LeafletMap";
+import LeftSideBar from "./components/shared/LeftSideBar";
 import Navbar from "./components/shared/Navbar";
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
     <div>
       <Navbar />
       <div className="flex">
-        {/* <LeftSideBar /> */}
+        <LeftSideBar />
         <LeafletMap />;{/* <RightSidebar /> */}
       </div>
     </div>

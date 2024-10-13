@@ -3,94 +3,36 @@ import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setData } from "@/slices/dataSlice";
+import { RxHamburgerMenu } from "react-icons/rx";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { setCurrentCity } from "@/slices/searchSlice";
+import { countries } from "@/constants/constants";
 
-const countries = [
-  {
-    name: "Türkiye",
-    lat: 39.9334, // Türkiye'nin ortalama konumu (Ankara baz alındı)
-    lng: 32.8597,
-    cities: [
-      {
-        name: "İstanbul",
-        lat: 41.0082,
-        lng: 28.9784,
-        earthquakes: [
-          { date: "2024-10-10", magnitude: 4.5 },
-          { date: "2024-08-25", magnitude: 3.2 },
-        ],
-      },
-      {
-        name: "Ankara",
-        lat: 39.9334,
-        lng: 32.8597,
-        earthquakes: [{ date: "2024-09-15", magnitude: 3.8 }],
-      },
-    ],
-  },
-  {
-    name: "Japonya",
-    lat: 36.2048,
-    lng: 138.2529,
-    cities: [
-      {
-        name: "Tokyo",
-        lat: 35.6762,
-        lng: 139.6503,
-        earthquakes: [
-          { date: "2024-10-05", magnitude: 5.1 },
-          { date: "2024-09-20", magnitude: 4.3 },
-        ],
-      },
-      {
-        name: "Osaka",
-        lat: 34.6937,
-        lng: 135.5023,
-        earthquakes: [{ date: "2024-07-30", magnitude: 3.9 }],
-      },
-    ],
-  },
-  {
-    name: "İtalya",
-    lat: 41.8719, // İtalya'nın ortalama konumu (Roma baz alındı)
-    lng: 12.5674,
-    cities: [
-      {
-        name: "Roma",
-        lat: 41.9028,
-        lng: 12.4964,
-        earthquakes: [{ date: "2024-09-10", magnitude: 4.0 }],
-      },
-      {
-        name: "Milano",
-        lat: 45.4642,
-        lng: 9.19,
-        earthquakes: [{ date: "2024-08-02", magnitude: 2.9 }],
-      },
-    ],
-  },
-  {
-    name: "ABD",
-    lat: 37.0902, // ABD'nin ortalama konumu (geniş coğrafya nedeniyle yaklaşık bir merkez)
-    lng: -95.7129,
-    cities: [
-      {
-        name: "Los Angeles",
-        lat: 34.0522,
-        lng: -118.2437,
-        earthquakes: [
-          { date: "2024-10-01", magnitude: 4.8 },
-          { date: "2024-09-12", magnitude: 3.5 },
-        ],
-      },
-      {
-        name: "San Francisco",
-        lat: 37.7749,
-        lng: -122.4194,
-        earthquakes: [{ date: "2024-09-29", magnitude: 5.2 }],
-      },
-    ],
-  },
-];
+interface City {
+  name: string;
+  lat: number;
+  lng: number;
+  earthquakes: { date: string; magnitude: number }[];
+}
+
+interface Country {
+  name: string;
+  lat: number;
+  lng: number;
+  cities: City[];
+}
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>("");
@@ -102,30 +44,107 @@ const Navbar = () => {
 
   function handleSearch(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      setSearch(search.trim());
+      const trimmedSearch = search.trim();
 
-      if (search) {
+      if (trimmedSearch) {
         const selectedCountry = countries.filter((country) =>
-          country.name.toLowerCase().includes(search.toLowerCase())
+          country.name.toLowerCase().includes(trimmedSearch.toLowerCase())
         );
 
-        dispatch(setData(selectedCountry));
+        dispatch(setData(selectedCountry)); // Seçilen ülkeyi dispatch et
       }
     }
   }
 
+  const [currentSelectedCountry, setCurrentSelectedCountry] =
+    useState<Country | null>(null);
+
+  const handleCountryChange = (selectedCountryName: string) => {
+    const selectedCountry = countries.find(
+      (country) => country.name === selectedCountryName
+    );
+    if (selectedCountry) {
+      dispatch(setData([selectedCountry]));
+      setCurrentSelectedCountry(selectedCountry);
+      dispatch(setCurrentCity(null));
+      setSearch("");
+    }
+  };
+  const handleCityChange = (selectedCityName: string) => {
+    if (currentSelectedCountry) {
+      const selectedCity = currentSelectedCountry.cities.find(
+        (city: City) => city.name === selectedCityName
+      );
+
+      if (selectedCity) {
+        // Burada mevcut ülkenin içinde yalnızca seçilen şehri tutan yeni bir obje oluşturuyoruz
+        const updatedCountry = {
+          ...currentSelectedCountry,
+          cities: [selectedCity], // Sadece seçilen şehri içeren bir dizi oluştur
+        };
+
+        // Şehir ve ülke verisini dispatch et
+        dispatch(setData([updatedCountry])); // Ülkenin tüm verisini setData'ya gönder
+        dispatch(setCurrentCity(selectedCity)); // Mevcut şehri güncelle
+        setSearch(""); // Arama kutusunu temizle
+      }
+    }
+  };
+
+  // Toggle the state when clicking on the SheetTrigger
+
   return (
-    <div className="flex items-center justify-center p-8 sticky top-0 left-0 z-50 bg-red-500">
+    <div className="flex items-center justify-center gap-4 p-8 sticky top-0 left-0 z-50 bg-red-500">
       <div className="relative w-full max-w-[550px] flex items-center">
         <FaSearch className="absolute top-1/2 right-4 -translate-y-1/2" />
         <Input
           type="text"
+          value={search}
           onChange={handleInputChange}
           onKeyDown={handleSearch}
-          placeholder="Şehir Ara"
+          placeholder="Ülke Arama"
           className="pl-5 w-full border-none h-[48px]"
         />
       </div>
+
+      <Sheet>
+        <SheetTrigger>
+          <RxHamburgerMenu className="h-6 w-6 sm:hidden" />
+        </SheetTrigger>
+        <SheetContent>
+          <Select onValueChange={handleCountryChange}>
+            <SelectTrigger className="w-[180px] rounded-sm">
+              <SelectValue placeholder="Countries" />
+            </SelectTrigger>
+            <SelectContent>
+              {countries.map((country) => (
+                <SelectItem key={country.name} value={country.name}>
+                  {country.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Şehir seçimi, sadece bir ülke seçildiyse göster */}
+          {currentSelectedCountry &&
+            currentSelectedCountry.cities.length > 0 && (
+              <Select onValueChange={handleCityChange}>
+                <SelectTrigger className="w-[180px] rounded-sm">
+                  <SelectValue placeholder="Cities" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currentSelectedCountry.cities.map((city: City) => (
+                    <SheetClose>
+                      <SelectItem key={city.name} value={city.name}>
+                        {city.name}
+                      </SelectItem>
+                    </SheetClose>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
