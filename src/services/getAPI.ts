@@ -12,22 +12,20 @@ export async function getAllEarthQuakes() {
   }
 }
 
-export async function getCountries() {
+export async function getCitiesWithCountries(coutryName: string) {
   try {
-    const url = `${URL}countries`;
+    const url = `${URL}country/${coutryName}`;
 
     const req = await axios.get(url);
-
     return req.data;
   } catch (error) {
     console.log("Error:", error);
   }
 }
 
-export async function getCitiesWithCountries(coutryName: string) {
+export async function getCountries() {
   try {
-    const url = `${URL}country/${coutryName}`;
-
+    const url = `${URL}countries`;
     const req = await axios.get(url);
     return req.data;
   } catch (error) {

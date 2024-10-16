@@ -14,11 +14,12 @@ import {
   selectCity,
   setData,
   setLocation,
-} from "../../slices/dataSlice"; // Import actions
+  clearSelections,
+} from "../../slices/dataSlice";
 import { Button } from "../ui/button";
 
 const LeftSideBar = () => {
-  const dispatch = useDispatch(); // Initialize dispatch to update the Redux store
+  const dispatch = useDispatch();
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
   const [selectedCity, setSelectedCity] = useState<string | undefined>();
 
@@ -29,43 +30,45 @@ const LeftSideBar = () => {
   });
 
   // Fetch cities based on the selected country
-  const { data: cities } = useQuery<any[]>({
+  const { data: cities } = useQuery<any>({
     queryKey: ["cities", selectedCountry],
-    queryFn: () => getCitiesWithCountries(selectedCountry), // Fetch cities based on selected country
-    enabled: !!selectedCountry, // Only run the query if a country is selected
+    queryFn: () => getCitiesWithCountries(selectedCountry),
+    enabled: !!selectedCountry,
   });
+
+  const handleCountryChange = (value: string) => {
+    setSelectedCountry(value);
+    setSelectedCity(undefined); // Reset city selection when the country changes
+    dispatch(selectCountry(value));
+  };
+
+  const handleCityChange = (value: string) => {
+    setSelectedCity(value);
+    dispatch(selectCity(value));
+  };
 
   const handleSearch = () => {
     if (selectedCountry) {
-      // Dispatch actions when the "Ara" button is pressed
-      dispatch(selectCountry(selectedCountry));
+      if (cities) {
+        dispatch(setData([cities])); // cities'i bir dizi olarak Redux'a gönder
+      }
 
-      // Find the selected country and dispatch its averageLocation to the Redux store
+      // Find the selected country and set its averageLocation to the Redux store
       const selectedCountryData = countries?.find(
         (country) => country.name === selectedCountry
       );
       if (selectedCountryData?.averageLocation) {
         dispatch(setLocation(selectedCountryData.averageLocation));
       }
-
-      // Set the countries data to redux store
-      dispatch(setData(cities));
-    }
-
-    if (selectedCity) {
-      dispatch(selectCity(selectedCity)); // Set the selected city to redux store
     }
   };
 
   return (
     <div className="bg-gray-500 min-h-dvh w-[300px] absolute top-0 left-0 flex flex-col z-50 pt-32 items-center gap-8 max-sm:hidden">
       {/* Country selection */}
-      <Select
-        value={selectedCountry}
-        onValueChange={(value) => setSelectedCountry(value)}
-      >
+      <Select value={selectedCountry} onValueChange={handleCountryChange}>
         <SelectTrigger className="w-[180px] rounded-sm">
-          <SelectValue placeholder="Countries" />
+          <SelectValue placeholder="Select Country" />
         </SelectTrigger>
         <SelectContent>
           {countries?.map((country) => (
@@ -76,18 +79,15 @@ const LeftSideBar = () => {
         </SelectContent>
       </Select>
 
-      {/* City selection, shown only if a country is selected */}
-      {cities?.cities && cities?.cities.length > 0 && (
-        <Select
-          value={selectedCity}
-          onValueChange={(value) => setSelectedCity(value)}
-        >
+      {/* City selection */}
+      {cities && cities.cities && cities.cities.length > 0 && (
+        <Select value={selectedCity} onValueChange={handleCityChange}>
           <SelectTrigger className="w-[180px] rounded-sm">
-            <SelectValue placeholder="Cities" />
+            <SelectValue placeholder="Select City" />
           </SelectTrigger>
           <SelectContent>
-            {cities?.cities?.map((city: any) => (
-              <SelectItem key={city._id} value={city.name}>
+            {cities.cities.map((city: any) => (
+              <SelectItem key={city._id} value={city._id}>
                 {city.name}
               </SelectItem>
             ))}
@@ -95,7 +95,7 @@ const LeftSideBar = () => {
         </Select>
       )}
 
-      {/* "Ara" button to trigger dispatch actions */}
+      {/* "Search" button */}
       <Button onClick={handleSearch}>Ara</Button>
     </div>
   );

@@ -1,30 +1,41 @@
 import { Position } from "../../types/types";
 import "./leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
-import { getAllEarthQuakes, getCountries } from "@/services/getAPI";
+import { getCountries } from "@/services/getAPI";
+import { setCountries } from "@/slices/dataSlice";
 
 const position: Position = [51.505, -0.09];
 
-type Earthquake = {
-  _id: string;
-  country: string;
-  city: string;
-  date: string; // ISO tarih formatı
-  magnitude: number;
-  depth: number;
-  __v: number;
-};
-
 const LeafletMap = () => {
+  const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.data.data);
-  console.log(data);
   const selectedCountry = useSelector(
     (state: RootState) => state.data.selectedCountry
   );
+  const selectedCity = useSelector(
+    (state: RootState) => state.data.selectedCity
+  ); // Değişiklik burada
+
+  const { isLoading, data: countries } = useQuery<any[]>({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+  });
+
+  useEffect(() => {
+    if (!isLoading && countries) {
+      // Burada loading kontrolü yapıldı
+      console.log("countries", countries);
+      dispatch(setCountries(countries));
+    }
+  }, [isLoading, countries, dispatch]); // Dependencies eklendi
+
+  console.log("selected city", selectedCity);
+  console.log("data", data);
+  console.log("selectedCountry", selectedCountry);
 
   const countryLat = useSelector(
     (state: RootState) => state.data?.location?.latitude
@@ -32,16 +43,6 @@ const LeafletMap = () => {
   const countryLng = useSelector(
     (state: RootState) => state.data?.location?.longitude
   );
-
-  const { data: datas } = useQuery<Earthquake[]>({
-    queryKey: ["earthquakes"],
-    queryFn: getAllEarthQuakes,
-  });
-
-  const { data: countries } = useQuery<any[]>({
-    queryKey: ["cities", selectedCountry],
-    queryFn: getCountries, // Ensure this fetches data correctly
-  });
 
   // Map reference
   const mapRef = useRef<any>(null);
@@ -53,11 +54,6 @@ const LeafletMap = () => {
       });
     }
   }, [countryLat, countryLng]);
-
-  useEffect(() => {
-    // Debugging: Check the structure of `countries`
-    console.log("Countries Data:", countries);
-  }, [countries]);
 
   return (
     <MapContainer
@@ -71,26 +67,23 @@ const LeafletMap = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* Render markers only if countries data exists and contains cities */}
-      {data &&
-        data.length > 0 &&
-        data.map((city: any) =>
-          city.epicenter && city.epicenter.lat && city.epicenter.lng ? (
-            <Marker
-              key={city._id} // Using _id as a unique key for each marker
-              position={[city.epicenter.lat, city.epicenter.lng]}
-            >
-              <Popup>
-                <strong>{city.city}</strong>
-                <br />
-                Country: {city.country} <br />
-                Magnitude: {city.magnitude} <br />
-                Depth: {city.depth} km <br />
-                Date: {new Date(city.date).toLocaleDateString()}
-              </Popup>
-            </Marker>
-          ) : null
-        )}
+
+      {data?.map((country) =>
+        country?.cities
+          ?.filter((city) => city._id === selectedCity)
+          .map(
+            (
+              city // Burada selectedCity._id kullanıldı
+            ) => (
+              <Marker
+                key={city._id} // Her Marker için benzersiz bir anahtar ekle
+                position={[city?.location?.latitude, city?.location.longitude]} // location yerine doğrudan lat ve lng kullanıldı
+              >
+                <Popup>Easily customizable.</Popup>
+              </Marker>
+            )
+          )
+      )}
     </MapContainer>
   );
 };
