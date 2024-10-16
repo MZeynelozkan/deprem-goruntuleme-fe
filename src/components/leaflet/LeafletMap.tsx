@@ -79,7 +79,7 @@ const LeafletMap = () => {
                 key={city._id} // Her Marker için benzersiz bir anahtar ekle
                 position={[city?.location?.latitude, city?.location.longitude]} // location yerine doğrudan lat ve lng kullanıldı
               >
-                <Popup>
+                <Popup key={city._id}>
                   {city?.recentEarthquakes?.map((e) => (
                     <>
                       <p>Tarih: {e.date}</p>
