@@ -4,11 +4,18 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useQuery } from "@tanstack/react-query";
+import { getAllEarthQuakes } from "@/services/getAPI";
 
 const position: Position = [51.505, -0.09];
 
 const LeafletMap = () => {
   const data = useSelector((state: RootState) => state.data.data);
+
+  const { data: datas } = useQuery({
+    queryKey: ["earthquakes"],
+    queryFn: getAllEarthQuakes,
+  });
 
   let cities: any[] = [];
   let countryLat = position[0];
@@ -59,8 +66,8 @@ const LeafletMap = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {/* Render markers only if cities exist */}
-      {cities.length > 0 &&
-        cities.map((city) => (
+      {datas.length > 0 &&
+        datas.map((city) => (
           <Marker
             eventHandlers={{
               click: () => {

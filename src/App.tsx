@@ -8,7 +8,7 @@ function App() {
       <Navbar />
       <div className="flex">
         <LeftSideBar />
-        <LeafletMap />;{/* <RightSidebar /> */}
+        <LeafletMap />
       </div>
     </div>
   );
