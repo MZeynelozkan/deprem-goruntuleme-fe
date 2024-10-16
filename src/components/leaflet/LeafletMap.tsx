@@ -17,6 +17,8 @@ const LeafletMap = () => {
     queryFn: getAllEarthQuakes,
   });
 
+  console.log(datas);
+
   let cities: any[] = [];
   let countryLat = position[0];
   let countryLng = position[1];
@@ -65,29 +67,21 @@ const LeafletMap = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* Render markers only if cities exist */}
-      {datas.length > 0 &&
+      {/* Render markers only if datas exist */}
+      {datas &&
+        datas.length > 0 &&
         datas.map((city) => (
           <Marker
-            eventHandlers={{
-              click: () => {
-                // Find the city within the country's cities array
-                const foundCity = data[0].cities.find(
-                  (c) => c.name === city.name
-                );
-
-                // Ensure that the city exists and contains earthquakes data
-                const earthquakes = foundCity?.earthquakes;
-                console.log("Found city:", foundCity);
-                console.log("Earthquakes:", earthquakes);
-              },
-            }}
-            key={city.name}
-            position={[city.lat, city.lng]}
+            key={city._id} // Using _id as a unique key for each marker
+            position={[city.epicenter.lat, city.epicenter.lng]}
           >
             <Popup>
-              {city.name} <br /> Latitude: {city.lat} <br /> Longitude:{" "}
-              {city.lng}
+              <strong>{city.city}</strong>
+              <br />
+              Country: {city.country} <br />
+              Magnitude: {city.magnitude} <br />
+              Depth: {city.depth} km <br />
+              Date: {new Date(city.date).toLocaleDateString()}
             </Popup>
           </Marker>
         ))}
