@@ -13,6 +13,7 @@ const position: Position = [51.505, -0.09];
 const LeafletMap = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.data.data);
+  const scaleDatas = useSelector((state: RootState) => state.data.scaleDatas);
   const selectedCountry = useSelector(
     (state: RootState) => state.data.selectedCountry
   );
@@ -54,6 +55,34 @@ const LeafletMap = () => {
       });
     }
   }, [countryLat, countryLng]);
+
+  if (scaleDatas) {
+    return (
+      <MapContainer
+        ref={mapRef}
+        scrollWheelZoom={true}
+        center={position}
+        zoom={10}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {scaleDatas.map((scaleData) => (
+          <Marker
+            key={scaleData._id}
+            position={[scaleData?.epicenter?.lat, scaleData?.epicenter?.lng]}
+          >
+            <Popup key={scaleData._id}>
+              {/* You can add content for the Popup here */}
+              <span>{`Magnitude: ${scaleData.magnitude}`}</span>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    );
+  }
 
   return (
     <MapContainer

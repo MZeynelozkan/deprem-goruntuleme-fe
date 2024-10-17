@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { act } from "react";
 
 interface Earthquake {
   date: string;
@@ -28,6 +27,8 @@ interface DataState {
   selectedCountry?: Country; // Store the currently selected country
   selectedCity?: City; // Store the currently selected city
   location?: { lat: number; lng: number }; // Store the location of the selected country
+  scale?: number; // Deprem büyüklüğü için yeni bir alan
+  scaleDatas: any[]; // New property to hold scale data
 }
 
 // Initial state with empty countries array and no selected country or city
@@ -37,6 +38,8 @@ const initialState: DataState = {
   selectedCountry: undefined, // No country selected initially
   selectedCity: undefined, // No city selected initially
   location: undefined,
+  scale: undefined, // Başlangıçta scale boş
+  scaleDatas: [], // Initialize with an empty array
 };
 
 const dataSlice = createSlice({
@@ -58,7 +61,6 @@ const dataSlice = createSlice({
       const country = state.countries.find(
         (country) => country.name === action.payload
       );
-      console.log("country", country);
       if (country) {
         // Assign the entire country object to selectedCountry
         state.selectedCountry = country;
@@ -68,13 +70,10 @@ const dataSlice = createSlice({
 
     // Action to set the selected city
     selectCity: (state, action: PayloadAction<string>) => {
-      console.log("payload", action.payload);
       if (state.selectedCountry) {
         const city = state.selectedCountry.cities.find(
-          (city) => city === action.payload
+          (city) => city.name === action.payload
         );
-
-        console.log("selectedCity", city);
         if (city) {
           // Assign the entire city object to selectedCity
           state.selectedCity = city;
@@ -90,10 +89,22 @@ const dataSlice = createSlice({
       state.location = action.payload;
     },
 
+    // Action to set the earthquake magnitude scale
+    setScale: (state, action: PayloadAction<number>) => {
+      state.scale = action.payload;
+    },
+
+    // Action to set scale data
+    setScaleDatas: (state, action: PayloadAction<any[]>) => {
+      state.scaleDatas = action.payload; // Set the scale data
+    },
+
     // Clear selections for both country and city
     clearSelections: (state) => {
       state.selectedCountry = undefined;
       state.selectedCity = undefined;
+      state.scale = undefined;
+      state.scaleDatas = []; // Reset scale data when selections are cleared
     },
   },
 });
@@ -101,11 +112,13 @@ const dataSlice = createSlice({
 // Export actions
 export const {
   setData,
-  setCountries, // Yeni action export ediliyor
+  setCountries,
   selectCountry,
   selectCity,
   clearSelections,
   setLocation,
+  setScale,
+  setScaleDatas, // Export the new action
 } = dataSlice.actions;
 
 // Export the reducer
