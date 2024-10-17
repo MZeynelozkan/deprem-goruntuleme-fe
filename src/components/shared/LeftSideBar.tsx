@@ -20,6 +20,7 @@ import {
   setData,
   setLocation,
   setScale,
+  setScaleDatas,
 } from "../../slices/dataSlice";
 import { Button } from "../ui/button";
 import { scales } from "../../constants/constants";
@@ -69,7 +70,8 @@ const LeftSideBar = () => {
   const handleSearch = () => {
     if (selectedCountry) {
       if (cities) {
-        dispatch(setData([cities])); // cities'i bir dizi olarak Redux'a gönder
+        dispatch(setData([cities]));
+        dispatch(setScaleDatas([]));
       }
 
       // Find the selected country and set its averageLocation to the Redux store
