@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Earthquake {
@@ -6,6 +7,9 @@ interface Earthquake {
 }
 
 interface City {
+  location: any;
+  _id: City | undefined;
+  recentEarthquakes: any;
   name: string;
   lat: number;
   lng: number;
@@ -26,7 +30,7 @@ interface DataState {
   data: Country[]; // An array of countries, each containing cities and their associated earthquakes
   selectedCountry?: Country; // Store the currently selected country
   selectedCity?: City; // Store the currently selected city
-  location?: { lat: number; lng: number }; // Store the location of the selected country
+  location?: { latitude: number; longitude: number }; // Store the location of the selected country
   scale?: number; // Deprem büyüklüğü için yeni bir alan
   scaleDatas: any[]; // New property to hold scale data
 }
@@ -84,7 +88,7 @@ const dataSlice = createSlice({
     // Action to set the location (latitude and longitude)
     setLocation: (
       state,
-      action: PayloadAction<{ lat: number; lng: number }>
+      action: PayloadAction<{ latitude: number; longitude: number }>
     ) => {
       state.location = action.payload;
     },

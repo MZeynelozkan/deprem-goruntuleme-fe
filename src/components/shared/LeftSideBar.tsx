@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -25,7 +26,7 @@ import { scales } from "../../constants/constants";
 
 const LeftSideBar = () => {
   const dispatch = useDispatch();
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string | undefined>();
   const [selectedScale, setSelectedScale] = useState<string | undefined>();
 
@@ -35,7 +36,7 @@ const LeftSideBar = () => {
     queryFn: getCountries,
   });
 
-  const { data: byScale, refetch } = useQuery<any[]>({
+  const { refetch } = useQuery<any[]>({
     queryKey: ["byScale"],
     queryFn: () => getEarthquakesByScales(selectedScale),
     enabled: !!selectedScale,

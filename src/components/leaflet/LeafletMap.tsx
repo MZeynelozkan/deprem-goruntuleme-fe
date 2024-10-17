@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position } from "../../types/types";
 import "./leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
@@ -105,17 +106,19 @@ const LeafletMap = () => {
               city // Burada selectedCity._id kullanıldı
             ) => (
               <Marker
-                key={city._id} // Her Marker için benzersiz bir anahtar ekle
+                // Her Marker için benzersiz bir anahtar ekle
                 position={[city?.location?.latitude, city?.location.longitude]} // location yerine doğrudan lat ve lng kullanıldı
               >
-                <Popup key={city._id}>
-                  {city?.recentEarthquakes?.map((e) => (
-                    <>
-                      <p>Tarih: {e.date}</p>
-                      <p>Derinlik: {e.depth}</p>
-                      <p>Siddet: {e.magnitude}</p>
-                    </>
-                  ))}
+                <Popup>
+                  {city?.recentEarthquakes?.map(
+                    (e: { date: string; depth: number; magnitude: number }) => (
+                      <>
+                        <p>Tarih: {e.date}</p>
+                        <p>Derinlik: {e.depth}</p>
+                        <p>Siddet: {e.magnitude}</p>
+                      </>
+                    )
+                  )}
                 </Popup>
               </Marker>
             )
