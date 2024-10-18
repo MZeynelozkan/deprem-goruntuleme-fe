@@ -19,7 +19,7 @@ const searchSlice = createSlice({
     setSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
     },
-    setCurrentCity: (state, action: PayloadAction<string>) => {
+    setCurrentCountry: (state, action: PayloadAction<string>) => {
       state.currentCountry = action.payload;
     },
     setSearchData: (state, action: PayloadAction<any[]>) => {
@@ -28,5 +28,6 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setSearch, setCurrentCity, setSearchData } = searchSlice.actions;
+export const { setSearch, setCurrentCountry, setSearchData } =
+  searchSlice.actions;
 export default searchSlice.reducer;

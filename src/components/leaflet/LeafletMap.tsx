@@ -61,7 +61,7 @@ const LeafletMap = () => {
     }
   }, [countryLat, countryLng]);
 
-  if (searchCityDatas) {
+  if (searchCityDatas && searchCityDatas.length > 0) {
     return (
       <MapContainer
         ref={mapRef}

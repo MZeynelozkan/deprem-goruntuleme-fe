@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentCity } from "@/slices/searchSlice";
+import { setCurrentCountry } from "@/slices/searchSlice";
 import { getCitiesByCountry } from "@/services/getAPI";
 import { useQuery } from "@tanstack/react-query";
 import { RootState } from "@/store/store";
@@ -34,7 +34,7 @@ const Navbar = () => {
       dispatch(clearSelections());
       const trimmedSearch: string = search.trim();
       if (trimmedSearch) {
-        dispatch(setCurrentCity(trimmedSearch));
+        dispatch(setCurrentCountry(trimmedSearch));
         refetch(); // Veriyi refetch ile getir
       }
     }

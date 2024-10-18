@@ -115,7 +115,9 @@ const dataSlice = createSlice({
       state.selectedCountry = undefined;
       state.selectedCity = undefined;
       state.scale = undefined;
-      state.scaleDatas = []; // Reset scale data when selections are cleared
+      state.scaleDatas = [];
+      state.searchCityDatas = [];
+      state.data = [];
     },
   },
 });
