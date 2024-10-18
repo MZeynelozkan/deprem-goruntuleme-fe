@@ -97,6 +97,7 @@ const MobileNavbar = () => {
   };
 
   const handleScaleChange = (value: string) => {
+    dispatch(clearSelections());
     setSelectedScale(value);
     dispatch(setScale(Number(value))); // Convert the string value to a number
   };
