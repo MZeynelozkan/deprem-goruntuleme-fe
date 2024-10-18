@@ -102,9 +102,7 @@ const LeafletMap = () => {
             key={city._id}
             position={[city?.location?.latitude, city?.location?.longitude]}
           >
-            <Popup key={city._id}>
-              {/* You can add content for the Popup here */}
-            </Popup>
+            <Popup key={city._id}>{city.name}</Popup>
           </Marker>
         ))}
         )
