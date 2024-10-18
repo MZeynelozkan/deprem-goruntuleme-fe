@@ -6,6 +6,7 @@ import { getCitiesByCountry } from "@/services/getAPI";
 import { useQuery } from "@tanstack/react-query";
 import { RootState } from "@/store/store";
 import { clearSelections, setSearchData } from "@/slices/dataSlice";
+import MobileNavbar from "./MobileNavbar";
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>("");
@@ -69,6 +70,7 @@ const Navbar = () => {
         />
         <FaSearch />
       </div>
+      <MobileNavbar />
     </div>
   );
 };

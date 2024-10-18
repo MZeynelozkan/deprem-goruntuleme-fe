@@ -1,130 +1,168 @@
-// import { countries } from "@/constants/constants";
-// import { setData } from "@/slices/dataSlice";
-// import { setCurrentCity, setSearch } from "@/slices/searchSlice";
-// import {
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-// } from "@radix-ui/react-select";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-// import { useState } from "react";
-// import { RxHamburgerMenu } from "react-icons/rx";
-// import { Button } from "../ui/button";
-// import { Sheet, SheetTrigger, SheetContent, SheetClose } from "../ui/sheet";
-// import { useDispatch } from "react-redux";
+import { Button } from "../ui/button";
+import { RxHamburgerMenu } from "react-icons/rx";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+  SheetClose,
+} from "../ui/sheet";
+import {
+  getCitiesWithCountries,
+  getCountries,
+  getEarthquakesByScales,
+} from "@/services/getAPI";
+import { useQuery } from "@tanstack/react-query";
+import {
+  selectCountry,
+  selectCity,
+  setData,
+  setLocation,
+  setScale,
+  setScaleDatas,
+  clearSelections,
+} from "../../slices/dataSlice";
+import { scales } from "../../constants/constants";
 
-// interface City {
-//   name: string;
-//   lat: number;
-//   lng: number;
-//   earthquakes: { date: string; magnitude: number }[];
-// }
+const MobileNavbar = () => {
+  const dispatch = useDispatch();
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string | undefined>();
+  const [selectedScale, setSelectedScale] = useState<string | undefined>();
 
-// interface Country {
-//   name: string;
-//   lat: number;
-//   lng: number;
-//   cities: City[];
-// }
+  // Fetch countries data
+  const { data: countriesData } = useQuery<any[]>({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+  });
 
-// const MobileNavbar = () => {
-//   const dispatch = useDispatch();
+  // Fetch cities based on the selected country
+  const { data: cities } = useQuery<any>({
+    queryKey: ["cities", selectedCountry],
+    queryFn: () => getCitiesWithCountries(selectedCountry),
+    enabled: !!selectedCountry,
+  });
 
-//   const [currentSelectedCountry, setCurrentSelectedCountry] =
-//     useState<Country | null>(null);
-//   const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  // Refetch data when scale changes
+  const { refetch } = useQuery<any[]>({
+    queryKey: ["byScale"],
+    queryFn: () => getEarthquakesByScales(selectedScale),
+    enabled: !!selectedScale,
+  });
 
-//   const handleCountryChange = (selectedCountryName: string) => {
-//     const selectedCountry = countries.find(
-//       (country) => country.name === selectedCountryName
-//     );
-//     if (selectedCountry) {
-//       dispatch(setData([selectedCountry]));
-//       setCurrentSelectedCountry(selectedCountry);
-//       dispatch(setCurrentCity(null));
-//       setSelectedCity(null); // Şehir seçimlerini sıfırla
-//       setSearch("");
-//     }
-//   };
+  useEffect(() => {
+    if (selectedScale) {
+      refetch();
+    }
+  }, [selectedScale, refetch]);
 
-//   const handleCityChange = (selectedCityName: string) => {
-//     if (currentSelectedCountry) {
-//       const selectedCity = currentSelectedCountry.cities.find(
-//         (city: City) => city.name === selectedCityName
-//       );
+  const handleCountryChange = (value: string) => {
+    dispatch(clearSelections());
+    setSelectedCountry(value);
+    setSelectedCity(undefined); // Reset city selection when the country changes
+    dispatch(selectCountry(value));
+  };
 
-//       if (selectedCity) {
-//         setSelectedCity(selectedCity); // Seçilen şehri sakla
-//         setSearch(""); // Arama kutusunu temizle
-//       }
-//     }
-//   };
+  const handleCityChange = (value: string) => {
+    setSelectedCity(value);
+    dispatch(selectCity(value));
+  };
 
-//   const handleButtonClick = () => {
-//     if (currentSelectedCountry) {
-//       if (selectedCity) {
-//         // Hem ülke hem şehir seçiliyse
-//         const updatedCountry = {
-//           ...currentSelectedCountry,
-//           cities: [selectedCity], // Sadece seçilen şehri içeren bir dizi oluştur
-//         };
-//         dispatch(setData([updatedCountry]));
-//         dispatch(setCurrentCity(selectedCity)); // Seçilen şehri dispatch et
-//       } else {
-//         // Sadece ülke seçiliyse
-//         dispatch(setData([currentSelectedCountry]));
-//         dispatch(setCurrentCity(null)); // Şehri null yap
-//       }
-//     }
-//   };
-//   return (
-//     <Sheet>
-//       <SheetTrigger>
-//         <RxHamburgerMenu className="h-6 w-6 sm:hidden" />
-//       </SheetTrigger>
-//       <SheetContent className="flex flex-col items-center gap-4">
-//         <Select
-//           value={currentSelectedCountry?.name || ""}
-//           onValueChange={handleCountryChange}
-//         >
-//           <SelectTrigger className="w-full rounded-sm mt-5">
-//             <SelectValue placeholder="Countries" />
-//           </SelectTrigger>
-//           <SelectContent>
-//             {countries.map((country) => (
-//               <SelectItem key={country.name} value={country.name}>
-//                 {country.name}
-//               </SelectItem>
-//             ))}
-//           </SelectContent>
-//         </Select>
+  const handleSearch = () => {
+    if (selectedCountry) {
+      if (cities) {
+        dispatch(setData([cities]));
+        dispatch(setScaleDatas([]));
+      }
 
-//         {/* Şehir seçimi, sadece bir ülke seçildiyse göster */}
-//         {currentSelectedCountry && currentSelectedCountry.cities.length > 0 && (
-//           <Select
-//             value={selectedCity?.name || ""}
-//             onValueChange={handleCityChange}
-//           >
-//             <SelectTrigger className="w-full rounded-sm">
-//               <SelectValue placeholder="Cities" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               {currentSelectedCountry.cities.map((city: City) => (
-//                 <SelectItem key={city.name} value={city.name}>
-//                   {city.name}
-//                 </SelectItem>
-//               ))}
-//             </SelectContent>
-//           </Select>
-//         )}
-//         <SheetClose asChild>
-//           <Button onClick={handleButtonClick}>Search</Button>
-//         </SheetClose>
-//       </SheetContent>
-//     </Sheet>
-//   );
-// };
+      // Find the selected country and set its averageLocation to the Redux store
+      const selectedCountryData = countriesData?.find(
+        (country) => country.name === selectedCountry
+      );
+      if (selectedCountryData?.averageLocation) {
+        dispatch(setLocation(selectedCountryData.averageLocation));
+      }
+    }
+  };
 
-// export default MobileNavbar;
+  const handleScaleChange = (value: string) => {
+    setSelectedScale(value);
+    dispatch(setScale(Number(value))); // Convert the string value to a number
+  };
+
+  return (
+    <Sheet>
+      <SheetTrigger>
+        <RxHamburgerMenu className="h-6 w-6 sm:hidden" />
+      </SheetTrigger>
+      <SheetContent className="flex flex-col items-center gap-4 p-4">
+        <SheetTitle>Country, City, and Scale Selection</SheetTitle>
+        <SheetDescription>
+          Select a country, city, and scale for the search
+        </SheetDescription>
+
+        {/* Country selection */}
+        <Select value={selectedCountry} onValueChange={handleCountryChange}>
+          <SelectTrigger className="w-full rounded-sm mt-5">
+            <SelectValue placeholder="Select Country" />
+          </SelectTrigger>
+          <SelectContent>
+            {countriesData?.map((country) => (
+              <SelectItem key={country._id} value={country.name}>
+                {country.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* City selection */}
+        {cities && cities.cities && cities.cities.length > 0 && (
+          <Select value={selectedCity} onValueChange={handleCityChange}>
+            <SelectTrigger className="w-full rounded-sm">
+              <SelectValue placeholder="Select City" />
+            </SelectTrigger>
+            <SelectContent>
+              {cities.cities.map((city: any) => (
+                <SelectItem key={city._id} value={city._id}>
+                  {city.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Scale selection */}
+        <Select value={selectedScale} onValueChange={handleScaleChange}>
+          <SelectTrigger className="w-full rounded-sm">
+            <SelectValue placeholder="Select Scale" />
+          </SelectTrigger>
+          <SelectContent>
+            {scales.map((scale) => (
+              <SelectItem key={scale} value={scale.toString()}>
+                {scale}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* "Search" button */}
+        <SheetClose asChild>
+          <Button onClick={handleSearch}>Search</Button>
+        </SheetClose>
+      </SheetContent>
+    </Sheet>
+  );
+};
+
+export default MobileNavbar;

@@ -44,7 +44,7 @@ const RightSidebar = () => {
   console.log("chartData", chartData);
 
   return (
-    <div className=" min-h-dvh bg-white w-[300px] absolute top-0 right-0 flex flex-col items-center justify-center z-50">
+    <div className=" min-h-dvh bg-white w-[300px] absolute top-0 right-0 flex flex-col items-center justify-center z-50 max-sm:hidden">
       <ChartContainer config={chartConfig} className="w-full m">
         <ResponsiveContainer width="100%">
           <BarChart
