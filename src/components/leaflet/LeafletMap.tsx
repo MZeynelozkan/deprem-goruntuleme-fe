@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
 import { getCountries } from "@/services/getAPI";
-import { setCountries } from "@/slices/dataSlice";
+import { setChartData, setCountries } from "@/slices/dataSlice";
 
 const position: Position = [51.505, -0.09];
 
@@ -61,6 +61,26 @@ const LeafletMap = () => {
     }
   }, [countryLat, countryLng]);
 
+  function handleChangeChartDataByClickingMarker(city_id: string) {
+    // Find the selected city by ID from searchCityDatas
+    const currentChartData = searchCityDatas?.filter(
+      (city) => city._id === city_id
+    );
+
+    // Check if we have valid data for the selected city
+    if (currentChartData && currentChartData.length > 0) {
+      const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
+
+      // Ensure recentEarthquakes is available before dispatching
+      if (recentEarthquakes) {
+        dispatch(setChartData(recentEarthquakes));
+      } else {
+        console.error("No earthquake data found for the selected city.");
+      }
+    } else {
+      console.error("City data not found for the given city_id:", city_id);
+    }
+  }
   if (searchCityDatas && searchCityDatas.length > 0) {
     return (
       <MapContainer
@@ -76,7 +96,9 @@ const LeafletMap = () => {
         />
         {searchCityDatas.map((city) => (
           <Marker
-            eventHandlers={{ click: () => alert(city._id) }}
+            eventHandlers={{
+              click: () => handleChangeChartDataByClickingMarker(city._id),
+            }}
             key={city._id}
             position={[city?.location?.latitude, city?.location?.longitude]}
           >
@@ -136,7 +158,6 @@ const LeafletMap = () => {
           ?.filter((city) => city._id === selectedCity)
           .map((city) => (
             <Marker
-              eventHandlers={{ click: () => alert(city._id) }}
               position={[city?.location?.latitude, city?.location?.longitude]} // location yerine doğrudan lat ve lng kullanıldı
             >
               <Popup>
