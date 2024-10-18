@@ -14,11 +14,7 @@ const Navbar = () => {
   const data = useSelector((state: RootState) => state.search.currentCountry);
 
   // useQuery ile şehirleri alıyoruz, başlangıçta disabled.
-  const {
-    data: country,
-    refetch,
-    isLoading,
-  } = useQuery<any>({
+  const { data: country, refetch } = useQuery({
     queryKey: ["cities", data],
     queryFn: () => getCitiesByCountry(search),
   });
@@ -43,12 +39,19 @@ const Navbar = () => {
   // country verisi her değiştiğinde şehirleri Redux'a aktarıyoruz
   useEffect(() => {
     if (country) {
-      const cities = country?.cities?.map((city: any) => ({
-        name: city.name,
-        location: city.location,
-        recentEarthquakes: city.recentEarthquakes,
-        _id: city._id,
-      }));
+      const cities = country?.cities?.map(
+        (city: {
+          name: string;
+          location: object;
+          recentEarthquakes: [];
+          _id: string;
+        }) => ({
+          name: city.name,
+          location: city.location,
+          recentEarthquakes: city.recentEarthquakes,
+          _id: city._id,
+        })
+      );
       dispatch(setSearchData(cities));
     }
   }, [country, dispatch]); // country değiştiğinde bu effect çalışır

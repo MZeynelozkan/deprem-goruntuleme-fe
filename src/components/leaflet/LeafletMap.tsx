@@ -125,6 +125,9 @@ const LeafletMap = () => {
         />
         {scaleDatas.map((scaleData) => (
           <Marker
+            eventHandlers={{
+              click: () => handleChangeChartDataByClickingMarker(scaleData._id),
+            }}
             key={scaleData._id}
             position={[scaleData?.epicenter?.lat, scaleData?.epicenter?.lng]}
           >

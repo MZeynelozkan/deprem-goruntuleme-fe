@@ -21,9 +21,6 @@ const RightSidebar = () => {
   const selectedCity = useSelector(
     (state: RootState) => state.data.selectedCity
   );
-  const selectedCityData = useSelector(
-    (state: RootState) => state.data.searchCityDatas
-  );
 
   // Transform the recentEarthquakes data for the selected city
   const chartData = useMemo(() => {

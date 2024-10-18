@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { setSearch } from "./searchSlice";
 
 interface Earthquake {
   date: string;
@@ -56,7 +55,7 @@ const dataSlice = createSlice({
   initialState,
   reducers: {
     // Set the entire data (list of countries)
-    setData: (state, action: PayloadAction<Country[] | City[]>) => {
+    setData: (state, action: PayloadAction<Country[]>) => {
       state.data = action.payload;
     },
 
@@ -81,7 +80,7 @@ const dataSlice = createSlice({
     },
 
     // Action to set the selected city
-    selectCity: (state, action: PayloadAction<City>) => {
+    selectCity: (state, action: PayloadAction<City | string>) => {
       if (state.selectedCountry) {
         const city = state.selectedCountry.cities.find(
           (city) => city === action.payload
