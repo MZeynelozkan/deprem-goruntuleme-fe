@@ -35,6 +35,7 @@ interface DataState {
   scale?: number; // Deprem büyüklüğü için yeni bir alan
   scaleDatas: any[]; // New property to hold scale data
   searchCityDatas?: any[];
+  chartDatas: any[];
 }
 
 // Initial state with empty countries array and no selected country or city
@@ -47,6 +48,7 @@ const initialState: DataState = {
   scale: undefined, // Başlangıçta scale boş
   scaleDatas: [], // Initialize with an empty array
   searchCityDatas: [],
+  chartDatas: [],
 };
 
 const dataSlice = createSlice({
@@ -61,6 +63,9 @@ const dataSlice = createSlice({
     // Set the entire countries array
     setCountries: (state, action: PayloadAction<Country[]>) => {
       state.countries = action.payload; // countries dizisini güncelle
+    },
+    setChartData: (state, action: PayloadAction<any[]>) => {
+      state.chartDatas = action.payload; // Chart datasını state'e atar
     },
 
     // Action to set the selected country
@@ -133,6 +138,7 @@ export const {
   setScale,
   setScaleDatas,
   setSearchData,
+  setChartData,
 } = dataSlice.actions;
 
 // Export the reducer

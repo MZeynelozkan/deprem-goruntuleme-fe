@@ -1,6 +1,8 @@
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
+import { setChartData } from "@/slices/dataSlice";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BarChart,
   XAxis,
@@ -23,21 +25,34 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const RightSidebar = () => {
+  const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.data.data);
+  const charDatas = useSelector((state: RootState) => state.data.chartDatas);
   const selectedCity = useSelector(
     (state: RootState) => state.data.selectedCity
   );
+  const selectedCityData = useSelector(
+    (state: RootState) => state.data.searchCityDatas
+  );
 
   // Transform the recentEarthquakes data for the selected city
-  const chartData = data
-    ?.flatMap((country) =>
-      country.cities?.filter((city) => city?._id === selectedCity)
-    )
-    ?.flatMap((city) => city?.recentEarthquakes)
-    ?.map((earthquake) => ({
-      date: new Date(earthquake.date).toLocaleDateString(),
-      magnitude: earthquake.magnitude,
-    }));
+  const chartData = useMemo(() => {
+    return data
+      ?.flatMap((country) =>
+        country.cities?.filter((city) => city?._id === selectedCity)
+      )
+      ?.flatMap((city) => city?.recentEarthquakes)
+      ?.map((earthquake) => ({
+        date: new Date(earthquake.date).toLocaleDateString(),
+        magnitude: earthquake.magnitude,
+      }));
+  }, [data, selectedCity]);
+
+  useEffect(() => {
+    if (chartData && chartData.length > 0) {
+      dispatch(setChartData(chartData));
+    }
+  }, [chartData, dispatch]);
 
   console.log("chartData", chartData);
 
@@ -46,7 +61,7 @@ const RightSidebar = () => {
       <ChartContainer config={chartConfig} className="w-full m">
         <ResponsiveContainer width="100%">
           <BarChart
-            data={chartData}
+            data={charDatas}
             role="img"
             aria-label="Recent earthquake magnitudes"
           >

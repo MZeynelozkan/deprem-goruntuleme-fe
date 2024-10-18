@@ -76,6 +76,7 @@ const LeafletMap = () => {
         />
         {searchCityDatas.map((city) => (
           <Marker
+            eventHandlers={{ click: () => alert(city._id) }}
             key={city._id}
             position={[city?.location?.latitude, city?.location?.longitude]}
           >
@@ -135,6 +136,7 @@ const LeafletMap = () => {
           ?.filter((city) => city._id === selectedCity)
           .map((city) => (
             <Marker
+              eventHandlers={{ click: () => alert(city._id) }}
               position={[city?.location?.latitude, city?.location?.longitude]} // location yerine doğrudan lat ve lng kullanıldı
             >
               <Popup>
