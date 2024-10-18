@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Bar } from "recharts";
 import { chartConfig } from "@/config/chartConfig";
+import LeftSideBar from "./LeftSideBar";
 
 const RightSidebar = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,8 @@ const RightSidebar = () => {
   console.log("chartData", chartData);
 
   return (
-    <div className=" min-h-dvh bg-white w-[300px] absolute top-0 right-0 flex flex-col items-center justify-center z-50 max-sm:hidden">
+    <div className="h-[500px] bg-white w-[300px]  flex flex-col items-center justify-center  p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg  max-sm:hidden">
+      <LeftSideBar />
       <ChartContainer config={chartConfig} className="w-full m">
         <ResponsiveContainer width="100%">
           <BarChart

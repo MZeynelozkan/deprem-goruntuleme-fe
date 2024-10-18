@@ -24,7 +24,7 @@ import {
   clearSelections,
 } from "../../slices/dataSlice";
 import { Button } from "../ui/button";
-import { scales } from "../../constants/constants";
+import { countries, scales } from "../../constants/constants";
 
 const LeftSideBar = () => {
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const LeftSideBar = () => {
   };
 
   return (
-    <div className="bg-gray-500 min-h-dvh w-[300px] absolute top-0 left-0 flex flex-col z-50 pt-32 items-center gap-8 max-sm:hidden">
+    <div className="flex flex-col space-y-4">
       {/* Country selection */}
       <Select value={selectedCountry} onValueChange={handleCountryChange}>
         <SelectTrigger className="w-[180px] rounded-sm">

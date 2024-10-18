@@ -58,19 +58,21 @@ const Navbar = () => {
   }, [country, dispatch]); // country değiştiğinde bu effect çalışır
 
   return (
-    <div className="flex items-center justify-center gap-4 p-8 sticky top-0 left-0 z-50 bg-gray-500">
-      <div className="relative w-full max-w-[650px] flex items-center bg-white rounded-sm px-3">
+    <div className="flex w-full max-w-[1000px] absolute left-1/2 top-5 transform -translate-x-1/2  z-10 rounded-xl items-center justify-between gap-4 py-5 px-7 bg-white">
+      <h1 className="font-extrabold text-3xl text-slate-600">
+        Earthquakes Stats
+      </h1>
+      <div className="relative w-full max-w-[350px] rounded-sm px-3">
         <input
           type="text"
           value={search}
           onChange={handleInputChange}
           onKeyDown={handleSearch}
           placeholder="Ülke Arama"
-          className="pl-5 w-full h-12 border-0 shadow-none outline-none focus:outline-none focus:shadow-none focus:ring-0 placeholder-gray-400"
+          className="pl-5 w-full h-12 border rounded-lg shadow-none outline-none focus:outline-none focus:shadow-none focus:ring-0 placeholder-gray-400"
         />
-        <FaSearch />
+        <FaSearch className="absolute right-7 top-1/2 -translate-y-1/2" />
       </div>
-      <MobileNavbar />
     </div>
   );
 };
