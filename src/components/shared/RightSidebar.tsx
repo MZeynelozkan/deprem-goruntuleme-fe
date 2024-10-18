@@ -1,4 +1,4 @@
-import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
 import { setChartData } from "@/slices/dataSlice";
 import { RootState } from "@/store/store";
 import { useEffect, useMemo } from "react";
@@ -12,17 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Bar } from "recharts";
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
+import { chartConfig } from "@/config/chartConfig";
 
 const RightSidebar = () => {
   const dispatch = useDispatch();
