@@ -22,6 +22,10 @@ const LeafletMap = () => {
     (state: RootState) => state.data.selectedCity
   ); // Değişiklik burada
 
+  const searchCityDatas = useSelector(
+    (state: RootState) => state.data.searchCityDatas
+  );
+
   const { isLoading, data: countries } = useQuery<any[]>({
     queryKey: ["countries"],
     queryFn: getCountries,
@@ -57,7 +61,35 @@ const LeafletMap = () => {
     }
   }, [countryLat, countryLng]);
 
-  if (scaleDatas) {
+  if (searchCityDatas) {
+    return (
+      <MapContainer
+        ref={mapRef}
+        scrollWheelZoom={true}
+        center={position}
+        zoom={10}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {searchCityDatas.map((city) => (
+          <Marker
+            key={city._id}
+            position={[city?.location?.latitude, city?.location?.longitude]}
+          >
+            <Popup key={city._id}>
+              {/* You can add content for the Popup here */}
+            </Popup>
+          </Marker>
+        ))}
+        )
+      </MapContainer>
+    );
+  }
+
+  if (scaleDatas && scaleDatas.length > 0) {
     return (
       <MapContainer
         ref={mapRef}
@@ -101,28 +133,23 @@ const LeafletMap = () => {
       {data?.map((country) =>
         country?.cities
           ?.filter((city) => city._id === selectedCity)
-          .map(
-            (
-              city // Burada selectedCity._id kullanıldı
-            ) => (
-              <Marker
-                // Her Marker için benzersiz bir anahtar ekle
-                position={[city?.location?.latitude, city?.location.longitude]} // location yerine doğrudan lat ve lng kullanıldı
-              >
-                <Popup>
-                  {city?.recentEarthquakes?.map(
-                    (e: { date: string; depth: number; magnitude: number }) => (
-                      <>
-                        <p>Tarih: {e.date}</p>
-                        <p>Derinlik: {e.depth}</p>
-                        <p>Siddet: {e.magnitude}</p>
-                      </>
-                    )
-                  )}
-                </Popup>
-              </Marker>
-            )
-          )
+          .map((city) => (
+            <Marker
+              position={[city?.location?.latitude, city?.location?.longitude]} // location yerine doğrudan lat ve lng kullanıldı
+            >
+              <Popup>
+                {city?.recentEarthquakes?.map(
+                  (e: { date: string; depth: number; magnitude: number }) => (
+                    <>
+                      <p>Tarih: {e.date}</p>
+                      <p>Derinlik: {e.depth}</p>
+                      <p>Siddet: {e.magnitude}</p>
+                    </>
+                  )
+                )}
+              </Popup>
+            </Marker>
+          ))
       )}
     </MapContainer>
   );

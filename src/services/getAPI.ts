@@ -49,3 +49,14 @@ export async function getEarthquakesByScales(scale: string | undefined) {
     console.log("Error:", error);
   }
 }
+
+export async function getCitiesByCountry(countryName: string) {
+  try {
+    const url = `${URL}country/${countryName}`;
+    const req = await axios.get(url);
+
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}

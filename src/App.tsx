@@ -1,12 +1,12 @@
 import LeafletMap from "./components/leaflet/LeafletMap";
 import LeftSideBar from "./components/shared/LeftSideBar";
-// import Navbar from "./components/shared/Navbar";
+import Navbar from "./components/shared/Navbar";
 import RightSidebar from "./components/shared/RightSidebar";
 
 function App() {
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <div className="flex">
         <LeftSideBar />
         <LeafletMap />

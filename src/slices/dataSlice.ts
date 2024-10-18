@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { setSearch } from "./searchSlice";
 
 interface Earthquake {
   date: string;
@@ -33,6 +34,7 @@ interface DataState {
   location?: { latitude: number; longitude: number }; // Store the location of the selected country
   scale?: number; // Deprem büyüklüğü için yeni bir alan
   scaleDatas: any[]; // New property to hold scale data
+  searchCityDatas?: any[];
 }
 
 // Initial state with empty countries array and no selected country or city
@@ -44,6 +46,7 @@ const initialState: DataState = {
   location: undefined,
   scale: undefined, // Başlangıçta scale boş
   scaleDatas: [], // Initialize with an empty array
+  searchCityDatas: [],
 };
 
 const dataSlice = createSlice({
@@ -51,7 +54,7 @@ const dataSlice = createSlice({
   initialState,
   reducers: {
     // Set the entire data (list of countries)
-    setData: (state, action: PayloadAction<Country[]>) => {
+    setData: (state, action: PayloadAction<Country[] | City[]>) => {
       state.data = action.payload;
     },
 
@@ -73,16 +76,20 @@ const dataSlice = createSlice({
     },
 
     // Action to set the selected city
-    selectCity: (state, action: PayloadAction<string>) => {
+    selectCity: (state, action: PayloadAction<City>) => {
       if (state.selectedCountry) {
         const city = state.selectedCountry.cities.find(
-          (city) => city.name === action.payload
+          (city) => city === action.payload
         );
         if (city) {
           // Assign the entire city object to selectedCity
           state.selectedCity = city;
         }
       }
+    },
+
+    setSearchData: (state, action: PayloadAction<any[]>) => {
+      state.searchCityDatas = action.payload;
     },
 
     // Action to set the location (latitude and longitude)
@@ -122,7 +129,8 @@ export const {
   clearSelections,
   setLocation,
   setScale,
-  setScaleDatas, // Export the new action
+  setScaleDatas,
+  setSearchData,
 } = dataSlice.actions;
 
 // Export the reducer
