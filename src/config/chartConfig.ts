@@ -3,7 +3,7 @@ import { ChartConfig } from "@/components/ui/chart";
 export const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "#2563eb",
+    color: "#3b82f6",
   },
   mobile: {
     label: "Mobile",
