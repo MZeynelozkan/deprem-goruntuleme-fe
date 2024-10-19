@@ -24,7 +24,7 @@ import {
   clearSelections,
 } from "../../slices/dataSlice";
 import { Button } from "../ui/button";
-import { countries, scales } from "../../constants/constants";
+import { scales } from "../../constants/constants";
 import { setCurrentCountry, setSearch } from "@/slices/searchSlice";
 
 const LeftSideBar = () => {

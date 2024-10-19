@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { set } from "react-hook-form";
 
 interface SearchState {
-  cityId: any;
   search: string;
   currentCountry: string;
   _id: string;
