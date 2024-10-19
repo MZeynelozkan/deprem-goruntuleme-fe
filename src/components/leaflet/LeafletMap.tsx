@@ -162,6 +162,12 @@ const LeafletMap = () => {
           ?.filter((city) => city._id === selectedCity)
           .map((city) => (
             <Marker
+              eventHandlers={{
+                click: () => {
+                  handleChangeChartDataByClickingMarker(city._id);
+                  dispatch(setId(city._id));
+                },
+              }}
               position={[city?.location?.latitude, city?.location?.longitude]} // location yerine doğrudan lat ve lng kullanıldı
             >
               <Popup>

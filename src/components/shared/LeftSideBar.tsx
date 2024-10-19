@@ -25,6 +25,7 @@ import {
 } from "../../slices/dataSlice";
 import { Button } from "../ui/button";
 import { countries, scales } from "../../constants/constants";
+import { setCurrentCountry, setSearch } from "@/slices/searchSlice";
 
 const LeftSideBar = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,8 @@ const LeftSideBar = () => {
     setSelectedCountry(value);
     setSelectedCity(undefined); // Reset city selection when the country changes
     dispatch(selectCountry(value));
+    dispatch(setCurrentCountry(value));
+    dispatch(setSearch(value));
   };
 
   const handleCityChange = (value: string) => {
