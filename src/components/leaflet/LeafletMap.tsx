@@ -82,7 +82,7 @@ const LeafletMap = () => {
       console.error("City data not found for the given city_id:", city_id);
     }
   }
-  if (searchCityDatas && searchCityDatas.length > 0) {
+  if (searchCityDatas && searchCityDatas.length > 0 && !selectedCity) {
     return (
       <MapContainer
         ref={mapRef}

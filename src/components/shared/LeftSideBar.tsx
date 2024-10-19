@@ -15,17 +15,17 @@ import {
 } from "@/services/getAPI";
 import { useQuery } from "@tanstack/react-query";
 import {
-  selectCountry,
   selectCity,
   setData,
   setLocation,
   setScale,
   setScaleDatas,
   clearSelections,
+  selectCountry,
 } from "../../slices/dataSlice";
 import { Button } from "../ui/button";
 import { scales } from "../../constants/constants";
-import { setCurrentCountry, setSearch } from "@/slices/searchSlice";
+import { setCurrentCountry } from "@/slices/searchSlice";
 
 const LeftSideBar = () => {
   const dispatch = useDispatch();
@@ -59,12 +59,11 @@ const LeftSideBar = () => {
   });
 
   const handleCountryChange = (value: string) => {
-    dispatch(clearSelections());
     setSelectedCountry(value);
-    setSelectedCity(undefined); // Reset city selection when the country changes
+    dispatch(clearSelections());
     dispatch(selectCountry(value));
-    dispatch(setCurrentCountry(value));
-    dispatch(setSearch(value));
+
+    setSelectedCity(undefined); // Şehir seçimini sıfırla
   };
 
   const handleCityChange = (value: string) => {
@@ -85,6 +84,7 @@ const LeftSideBar = () => {
       );
       if (selectedCountryData?.averageLocation) {
         dispatch(setLocation(selectedCountryData.averageLocation));
+        dispatch(setCurrentCountry(selectedCountry));
       }
     }
   };
