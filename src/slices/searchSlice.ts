@@ -1,13 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 interface SearchState {
+  cityId: any;
   search: string;
   currentCountry: string;
+  _id: string;
 }
 
 const initialState: SearchState = {
   search: "",
   currentCountry: "",
+  _id: "",
 };
 
 const searchSlice = createSlice({
@@ -20,8 +24,11 @@ const searchSlice = createSlice({
     setCurrentCountry: (state, action: PayloadAction<string>) => {
       state.currentCountry = action.payload;
     },
+    setId: (state, action: PayloadAction<string>) => {
+      state._id = action.payload;
+    },
   },
 });
 
-export const { setSearch, setCurrentCountry } = searchSlice.actions;
+export const { setSearch, setCurrentCountry, setId } = searchSlice.actions;
 export default searchSlice.reducer;

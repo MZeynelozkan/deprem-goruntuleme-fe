@@ -55,10 +55,10 @@ const Navbar = () => {
       );
       dispatch(setSearchData(cities));
     }
-  }, [country, dispatch]); // country değiştiğinde bu effect çalışır
+  }, [country, dispatch]);
 
   return (
-    <div className="flex w-full max-w-[1000px] absolute left-1/2 top-5 transform -translate-x-1/2  z-10 rounded-xl items-center justify-between gap-4 py-5 px-7 bg-white">
+    <div className="flex border-2 border-gray-400	 w-full max-w-[1000px] absolute left-1/2 top-5 transform -translate-x-1/2  z-10 rounded-xl items-center justify-between gap-4 py-5 px-7 bg-white">
       <h1 className="font-extrabold text-3xl text-slate-600">
         Earthquakes Stats
       </h1>

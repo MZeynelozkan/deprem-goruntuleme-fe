@@ -8,6 +8,7 @@ import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
 import { getCountries } from "@/services/getAPI";
 import { setChartData, setCountries } from "@/slices/dataSlice";
+import { setId } from "@/slices/searchSlice";
 
 const position: Position = [51.505, -0.09];
 
@@ -97,7 +98,10 @@ const LeafletMap = () => {
         {searchCityDatas.map((city) => (
           <Marker
             eventHandlers={{
-              click: () => handleChangeChartDataByClickingMarker(city._id),
+              click: () => {
+                handleChangeChartDataByClickingMarker(city._id);
+                dispatch(setId(city._id));
+              },
             }}
             key={city._id}
             position={[city?.location?.latitude, city?.location?.longitude]}
@@ -105,7 +109,6 @@ const LeafletMap = () => {
             <Popup key={city._id}>{city.name}</Popup>
           </Marker>
         ))}
-        )
       </MapContainer>
     );
   }
