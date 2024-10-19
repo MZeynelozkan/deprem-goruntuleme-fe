@@ -1,18 +1,18 @@
-import LeafletMap from "./components/leaflet/LeafletMap";
-// import LeftSideBar from "./components/shared/LeftSideBar";
-import Navbar from "./components/shared/Navbar";
-import RightSidebar from "./components/shared/RightSidebar";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import MainPage from "./pages/mainPage/MainPage";
+import Layout from "./Layout";
+import AddNewPage from "./pages/addNewPage/AddNewPage";
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <div className="flex">
-        {/* <LeftSideBar /> */}
-        <LeafletMap />
-        <RightSidebar />
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<MainPage />} />
+          <Route path="/add-new-country-and-city" element={<AddNewPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

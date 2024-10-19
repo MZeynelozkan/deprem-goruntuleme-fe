@@ -6,7 +6,7 @@ import { getCitiesByCountry } from "@/services/getAPI";
 import { useQuery } from "@tanstack/react-query";
 import { RootState } from "@/store/store";
 import { clearSelections, setSearchData } from "@/slices/dataSlice";
-import MobileNavbar from "./MobileNavbar";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>("");
@@ -62,16 +62,24 @@ const Navbar = () => {
       <h1 className="font-extrabold text-3xl text-slate-600">
         Earthquakes Stats
       </h1>
-      <div className="relative w-full max-w-[350px] rounded-sm px-3">
-        <input
-          type="text"
-          value={search}
-          onChange={handleInputChange}
-          onKeyDown={handleSearch}
-          placeholder="Ülke Arama"
-          className="pl-5 w-full h-12 border rounded-lg shadow-none outline-none focus:outline-none focus:shadow-none focus:ring-0 placeholder-gray-400"
-        />
-        <FaSearch className="absolute right-7 top-1/2 -translate-y-1/2" />
+      <div className="flex items-center justify-between w-[450px]">
+        <Link
+          className="text-blue-300 font-bold hover:text-slate-900"
+          to="/add-new-country-and-city"
+        >
+          Veri Ekle
+        </Link>
+        <div className="relative w-full max-w-[350px] rounded-sm px-3">
+          <input
+            type="text"
+            value={search}
+            onChange={handleInputChange}
+            onKeyDown={handleSearch}
+            placeholder="Ülke Arama"
+            className="pl-5 w-full h-12 border rounded-lg shadow-none outline-none focus:outline-none focus:shadow-none focus:ring-0 placeholder-gray-400"
+          />
+          <FaSearch className="absolute right-7 top-1/2 -translate-y-1/2" />
+        </div>
       </div>
     </div>
   );

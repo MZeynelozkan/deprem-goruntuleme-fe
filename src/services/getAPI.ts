@@ -1,5 +1,6 @@
 import { URL } from "@/constants/constants";
 import { setScaleDatas } from "@/slices/dataSlice";
+import { postNewData } from "@/slices/postNewDataSlice";
 import store from "@/store/store";
 import axios from "axios";
 
@@ -55,6 +56,20 @@ export async function getCitiesByCountry(countryName: string) {
     const url = `${URL}country/${countryName}`;
     const req = await axios.get(url);
 
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
+export async function reverseGeocoding(latitude, longitude) {
+  try {
+    const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${
+      import.meta.env.VITE_GEO_REVERSE_API
+    }`;
+    const req = await axios.get(url);
+    console.log(req.data);
+    store.dispatch(postNewData(req.data));
     return req.data;
   } catch (error) {
     console.log("Error:", error);

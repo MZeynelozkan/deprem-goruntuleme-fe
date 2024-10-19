@@ -42,8 +42,6 @@ const RightSidebar = () => {
     }
   }, [chartData, dispatch]);
 
-  console.log("chartData", chartData);
-
   return (
     <div className="h-[500px] bg-white w-[300px]  flex flex-col items-center justify-center  p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg  max-sm:hidden">
       <LeftSideBar />
