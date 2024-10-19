@@ -17,39 +17,12 @@ import LeftSideBar from "./LeftSideBar";
 import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateNewEarthQuakeData } from "@/services/postAPI";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "../ui/input";
-
-interface UpdatedCity {
-  update: EarthquakeFormInputs[];
-  city: string;
-}
-
-// Zod doğrulama şeması
-const earthquakeSchema = z.object({
-  date: z
-    .string()
-    .nonempty("Tarih gerekli")
-    .refine((value) => {
-      const date = new Date(value);
-      return !isNaN(date.getTime());
-    }, "Geçerli bir tarih giriniz"),
-  depth: z
-    .number({
-      required_error: "Derinlik gerekli",
-      invalid_type_error: "Derinlik bir sayı olmalı",
-    })
-    .positive("Derinlik pozitif bir değer olmalı"),
-  magnitude: z
-    .number({
-      required_error: "Büyüklük gerekli",
-      invalid_type_error: "Büyüklük bir sayı olmalı",
-    })
-    .min(0, "Büyüklük sıfırdan büyük olmalı")
-    .max(10, "Büyüklük en fazla 10 olabilir"),
-});
+import { earthquakeSchema } from "@/lib/validations";
+import { UpdatedCity } from "@/types/types";
 
 type EarthquakeFormInputs = z.infer<typeof earthquakeSchema>;
 

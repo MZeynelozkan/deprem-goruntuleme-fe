@@ -27,3 +27,26 @@ export const formSchema = z.object({
     .min(2, "Country name must be at least 2 characters")
     .max(50),
 });
+
+export const earthquakeSchema = z.object({
+  date: z
+    .string()
+    .nonempty("Tarih gerekli")
+    .refine((value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    }, "Geçerli bir tarih giriniz"),
+  depth: z
+    .number({
+      required_error: "Derinlik gerekli",
+      invalid_type_error: "Derinlik bir sayı olmalı",
+    })
+    .positive("Derinlik pozitif bir değer olmalı"),
+  magnitude: z
+    .number({
+      required_error: "Büyüklük gerekli",
+      invalid_type_error: "Büyüklük bir sayı olmalı",
+    })
+    .min(0, "Büyüklük sıfırdan büyük olmalı")
+    .max(10, "Büyüklük en fazla 10 olabilir"),
+});
