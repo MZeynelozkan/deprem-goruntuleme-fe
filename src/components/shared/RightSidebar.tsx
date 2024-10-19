@@ -125,7 +125,9 @@ const RightSidebar = () => {
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
-          <Button onClick={() => setUpdateState(!updateState)}>Update</Button>
+          {cityId && (
+            <Button onClick={() => setUpdateState(!updateState)}>Update</Button>
+          )}
         </div>
       )}
 
