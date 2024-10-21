@@ -120,7 +120,6 @@ const dataSlice = createSlice({
       state.selectedCity = undefined;
       state.scale = undefined;
       state.scaleDatas = [];
-      state.searchCityDatas = [];
       state.data = [];
     },
   },
