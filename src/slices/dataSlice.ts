@@ -8,7 +8,7 @@ interface Earthquake {
 
 interface City {
   location: any;
-  _id: City | undefined;
+  _id: string;
   recentEarthquakes: any;
   name: string;
   lat: number;
@@ -29,7 +29,7 @@ interface DataState {
   countries: Country[]; // Yeni property ekleniyor
   data: Country[]; // An array of countries, each containing cities and their associated earthquakes
   selectedCountry?: Country; // Store the currently selected country
-  selectedCity?: City; // Store the currently selected city
+  selectedCity?: City | string; // Store the currently selected city
   location?: { latitude: number; longitude: number }; // Store the location of the selected country
   scale?: number; // Deprem büyüklüğü için yeni bir alan
   scaleDatas: any[]; // New property to hold scale data
