@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -7,30 +7,34 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import { reverseGeocoding } from "@/services/getAPI";
+import { LatLngTuple } from "leaflet";
 
 // reverseGeocoding fonksiyonu
 
 function LocationMarker() {
-  const [position, setPosition] = useState(null);
-  const [clickedLatLng, setClickedLatLng] = useState(null);
+  const [position, setPosition] = useState<LatLngTuple | null>(null);
+  const [clickedLatLng, setClickedLatLng] = useState<LatLngTuple | null>(null);
 
   const map = useMapEvents({
     click(e) {
       // Tıklanan konumun lat/lng değerlerini set et
-      setClickedLatLng(e.latlng);
-      setPosition(e.latlng);
+      const latLngTuple: LatLngTuple = [e.latlng.lat, e.latlng.lng]; // LatLngTuple olarak ayarlama
+      setClickedLatLng(latLngTuple);
+      setPosition(latLngTuple);
       map.flyTo(e.latlng, map.getZoom());
     },
   });
+
+  console.log(position, clickedLatLng);
 
   // useQuery ile reverseGeocoding fonksiyonunu çağırıyoruz
   const { data, isError, isLoading } = useQuery({
     queryKey: ["reverseGeocoding", clickedLatLng],
     queryFn: () =>
       clickedLatLng
-        ? reverseGeocoding(clickedLatLng.lat, clickedLatLng.lng)
+        ? reverseGeocoding(clickedLatLng[0], clickedLatLng[1]) // LatLngTuple'dan erişim
         : null,
     enabled: !!clickedLatLng,
   });
@@ -39,7 +43,8 @@ function LocationMarker() {
     <>
       <Marker position={clickedLatLng}>
         <Popup>
-          Latitude: {clickedLatLng.lat}, Longitude: {clickedLatLng.lng}
+          Latitude: {clickedLatLng[0]}, Longitude: {clickedLatLng[1]}{" "}
+          {/* LatLngTuple'dan erişim */}
           {isLoading && <p>Loading location...</p>}
           {isError && <p>Error fetching location</p>}
           {data && (

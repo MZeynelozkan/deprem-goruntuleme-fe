@@ -62,7 +62,7 @@ export async function getCitiesByCountry(countryName: string) {
   }
 }
 
-export async function reverseGeocoding(latitude, longitude) {
+export async function reverseGeocoding(latitude: number, longitude: number) {
   try {
     const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${
       import.meta.env.VITE_GEO_REVERSE_API

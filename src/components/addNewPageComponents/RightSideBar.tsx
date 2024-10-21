@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form"; // FormProvider'ı ekledik
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -19,21 +18,36 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useNavigate } from "react-router-dom";
 
+interface RecentEarthquake {
+  date: string;
+  magnitude: number;
+  depth: number;
+}
+
+interface QueryData {
+  lat: number; // latitude
+  lon: number; // longitude
+}
+
 interface City {
   name: string;
   location: {
     latitude: number;
     longitude: number;
   };
-  recentEarthquakes: {
-    date: string;
-    magnitude: number;
-    depth: number;
-  }[];
+  recentEarthquakes: RecentEarthquake[];
+}
+
+interface DataFromRedux {
+  features: { properties: { county?: string; country?: string } }[];
+  recentEarthquakes?: RecentEarthquake[];
+  query: QueryData; // data.query yapısı için arayüz
 }
 
 const RightSideBar = () => {
-  const data = useSelector((state: RootState) => state.postData.postNewData); // Redux'dan alınan veri
+  const data = useSelector(
+    (state: RootState) => state.postData.postNewData
+  ) as DataFromRedux; // Redux'dan alınan veri
   console.log("data", data);
 
   const navigate = useNavigate();
@@ -45,7 +59,7 @@ const RightSideBar = () => {
       cities: City[];
       country: {
         name: string;
-        avarageLocation: { latitude: number; longitude: number };
+        averageLocation: { latitude: number; longitude: number };
       };
     } // mutate fonksiyonuna gönderilen veri tipi
   >({
@@ -55,7 +69,8 @@ const RightSideBar = () => {
     },
   });
 
-  const { setValue, ...form } = useForm<z.infer<typeof formSchema>>({
+  const methods = useForm<z.infer<typeof formSchema>>({
+    // useForm hook'u çağrılıyor
     resolver: zodResolver(formSchema),
     defaultValues: {
       cityName: "",
@@ -65,6 +80,8 @@ const RightSideBar = () => {
       countryName: "",
     },
   });
+
+  const { setValue } = methods; // setValue fonksiyonunu destructure ediyoruz
 
   // Redux store'dan gelen veriyi izleyerek formu güncelle
   useEffect(() => {
@@ -117,7 +134,6 @@ const RightSideBar = () => {
       country: {
         name: values.countryName,
         averageLocation: {
-          // avarageLocation yerine averageLocation kullanın
           latitude: parseFloat(values.latitude),
           longitude: parseFloat(values.longitude),
         },
@@ -130,10 +146,11 @@ const RightSideBar = () => {
 
   return (
     <div className="h-fit bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <FormProvider {...methods}>
+        {/* FormProvider ile sarıyoruz */}
+        <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
-            control={form.control}
+            control={methods.control}
             name="cityName"
             render={({ field }) => (
               <FormItem>
@@ -146,7 +163,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="latitude"
             render={({ field }) => (
               <FormItem>
@@ -159,7 +176,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="longitude"
             render={({ field }) => (
               <FormItem>
@@ -172,7 +189,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="recentEarthquakes.0.date"
             render={({ field }) => (
               <FormItem>
@@ -185,7 +202,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="recentEarthquakes.0.magnitude"
             render={({ field }) => (
               <FormItem>
@@ -203,7 +220,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="recentEarthquakes.0.depth"
             render={({ field }) => (
               <FormItem>
@@ -216,7 +233,7 @@ const RightSideBar = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={methods.control}
             name="countryName"
             render={({ field }) => (
               <FormItem>
@@ -230,7 +247,7 @@ const RightSideBar = () => {
           />
           <Button type="submit">Submit</Button>
         </form>
-      </Form>
+      </FormProvider>
     </div>
   );
 };
