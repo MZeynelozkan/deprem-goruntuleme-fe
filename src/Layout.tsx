@@ -4,7 +4,6 @@ import { Outlet, useLocation } from "react-router";
 
 const Layout = () => {
   const path = useLocation().pathname === "/add-new-country-and-city";
-  console.log(path);
 
   if (path) {
     return (

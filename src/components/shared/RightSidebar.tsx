@@ -23,11 +23,13 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { earthquakeSchema } from "@/lib/validations";
 import { UpdatedCity } from "@/types/types";
+import DeleteSideBar from "../addNewPageComponents/DeleteSideBar";
 
 type EarthquakeFormInputs = z.infer<typeof earthquakeSchema>;
 
 const RightSidebar = () => {
   const [updateState, setUpdateState] = useState(false);
+  const [showState, setShowState] = useState<boolean>(false);
   const cityId = useSelector((state: RootState) => state.search._id);
   const queryClient = useQueryClient();
   const currentCountry = useSelector(
@@ -103,8 +105,8 @@ const RightSidebar = () => {
 
   return (
     <>
-      {!updateState && (
-        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-[250px] right-5 rounded-lg max-sm:hidden">
+      {!updateState && !showState && (
+        <div className="h-[600px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-[250px] right-5 rounded-lg max-sm:hidden">
           <LeftSideBar />
           {charDatas && charDatas.length > 0 && (
             <ChartContainer config={chartConfig} className="w-full">
@@ -128,7 +130,14 @@ const RightSidebar = () => {
             </ChartContainer>
           )}
           {cityId && (
-            <Button onClick={() => setUpdateState(!updateState)}>Update</Button>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => setUpdateState(!updateState)}>
+                Update
+              </Button>
+              <Button onClick={() => setShowState(!showState)}>
+                Liste Goruntule
+              </Button>
+            </div>
           )}
         </div>
       )}
@@ -182,6 +191,8 @@ const RightSidebar = () => {
           </form>
         </div>
       )}
+
+      {showState && cityId && <DeleteSideBar setShowState={setShowState} />}
     </>
   );
 };

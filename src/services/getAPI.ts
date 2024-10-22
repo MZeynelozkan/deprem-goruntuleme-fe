@@ -75,3 +75,13 @@ export async function reverseGeocoding(latitude: number, longitude: number) {
     console.log("Error:", error);
   }
 }
+
+export async function getEarthquakesById(id: string) {
+  try {
+    const url = `${URL}earthquakes/${id}`;
+    const req = await axios.get(url);
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}

@@ -25,3 +25,18 @@ export async function updateNewEarthQuakeData(data: any) {
     console.log("Error:", error);
   }
 }
+
+export async function deleteRecentEarthquakeById(
+  cityId: string,
+  earthquakeId: string
+) {
+  try {
+    const url = `${URL}delete/${cityId}/${earthquakeId}`;
+    console.log("url", url);
+    const req = await axios.delete(url);
+    console.log(req.data);
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
