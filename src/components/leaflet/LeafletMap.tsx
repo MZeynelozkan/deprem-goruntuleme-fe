@@ -7,9 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
 import { getCountries } from "@/services/getAPI";
-import { setChartData, setCountries } from "@/slices/dataSlice";
+import { setChartData, setCountries, setSearchData } from "@/slices/dataSlice";
 import { setId } from "@/slices/searchSlice";
 import { Icon } from "leaflet";
+
+interface City {
+  name: string;
+  location: object;
+  recentEarthquakes: [];
+  _id: string;
+}
 
 const position: Position = [51.505, -0.09];
 
@@ -31,14 +38,45 @@ const LeafletMap = () => {
     (state: RootState) => state.data.selectedCity
   ); // Değişiklik burada
 
+  const id = useSelector((state: RootState) => state.search._id);
+
   const searchCityDatas = useSelector(
     (state: RootState) => state.data.searchCityDatas
+  );
+
+  const nationName = useSelector(
+    (state: RootState) => state.search.currentCountry
   );
 
   const { isLoading, data: countries } = useQuery<any[]>({
     queryKey: ["countries"],
     queryFn: getCountries,
   });
+
+  const { data: country, refetch } = useQuery<City[]>({
+    queryKey: ["cities", nationName],
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (id) {
+      refetch();
+    }
+  }, [id, refetch]);
+
+  console.log(country?.cities, "country cities");
+
+  useEffect(() => {
+    if (country) {
+      const cities = country?.cities?.map((city: City) => ({
+        name: city.name,
+        location: city.location,
+        recentEarthquakes: city.recentEarthquakes,
+        _id: city._id,
+      }));
+      dispatch(setSearchData(cities));
+    }
+  }, [country, dispatch]);
 
   useEffect(() => {
     if (!isLoading && countries) {
