@@ -139,6 +139,7 @@ const LeafletMap = () => {
     useMapEvents({
       click: () => {
         dispatch(setId(""));
+        dispatch(setChartData([]));
       },
     });
     return null;
