@@ -1,0 +1,53 @@
+@keyframes circle-keys {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-keys {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes outline-keys {
+  0% {
+    transform: scale(0);
+    outline: solid 20px hsl(0, 0%, 87%);
+    outline-offset: 0;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    outline: solid 0 transparent;
+    outline-offset: 20px;
+    opacity: 0;
+  }
+}
+
+.animate-circle-keys {
+  animation: circle-keys 2s ease-in-out infinite;
+}
+
+.animate-dot-keys {
+  animation: dot-keys 2s ease-in-out infinite;
+}
+
+.animate-outline-keys {
+  animation: outline-keys 2s ease-in-out infinite;
+}

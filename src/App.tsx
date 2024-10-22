@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
+import Loader from "./components/loader/Loader";
 
 // Dinamik import ile bileşenleri yüklüyoruz
 const MainPage = lazy(() => import("./pages/mainPage/MainPage"));
@@ -9,7 +10,7 @@ const AddNewPage = lazy(() => import("./pages/addNewPage/AddNewPage"));
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<MainPage />} />

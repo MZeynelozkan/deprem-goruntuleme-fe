@@ -104,27 +104,29 @@ const RightSidebar = () => {
   return (
     <>
       {!updateState && (
-        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
+        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-[250px] right-5 rounded-lg max-sm:hidden">
           <LeftSideBar />
-          <ChartContainer config={chartConfig} className="w-full">
-            <ResponsiveContainer width="100%">
-              <BarChart
-                data={charDatas}
-                role="img"
-                aria-label="Recent earthquake magnitudes"
-              >
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="magnitude"
-                  fill={chartConfig.desktop.color}
-                  radius={4}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          {charDatas && charDatas.length > 0 && (
+            <ChartContainer config={chartConfig} className="w-full">
+              <ResponsiveContainer width="100%">
+                <BarChart
+                  data={charDatas}
+                  role="img"
+                  aria-label="Recent earthquake magnitudes"
+                >
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar
+                    dataKey="magnitude"
+                    fill={chartConfig.desktop.color}
+                    radius={4}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          )}
           {cityId && (
             <Button onClick={() => setUpdateState(!updateState)}>Update</Button>
           )}
