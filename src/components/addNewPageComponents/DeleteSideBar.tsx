@@ -23,6 +23,8 @@ const DeleteSideBar = ({
   const id = useSelector((state: RootState) => state.search._id);
   const [earthquakeId, setEarthquakeId] = useState<string>("");
 
+  console.log(earthquakeId, "earthquakeId");
+
   const queryClient = useQueryClient();
 
   const { data: earthquake } = useQuery({
@@ -30,6 +32,8 @@ const DeleteSideBar = ({
     queryFn: () => getEarthquakesById(id),
     enabled: !!id,
   });
+
+  console.log(earthquake, "earthquake");
 
   const { mutate } = useMutation<
     void,

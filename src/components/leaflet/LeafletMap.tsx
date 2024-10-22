@@ -6,19 +6,12 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
-import { getCountries, getEarthquakesById } from "@/services/getAPI";
+import { getCountries } from "@/services/getAPI";
 import { setChartData, setCountries } from "@/slices/dataSlice";
 import { setId } from "@/slices/searchSlice";
 import { Icon } from "leaflet";
 
 const position: Position = [51.505, -0.09];
-
-interface EarthquakeData {
-  date: string;
-  depth: number;
-  magnitude: number;
-  // Add any other properties you expect
-}
 
 const LeafletMap = () => {
   const newIcon = new Icon({
@@ -34,8 +27,6 @@ const LeafletMap = () => {
   const selectedCountry = useSelector(
     (state: RootState) => state.data.selectedCountry
   );
-  const id = useSelector((state: RootState) => state.search._id);
-
   const selectedCity = useSelector(
     (state: RootState) => state.data.selectedCity
   ); // Değişiklik burada
@@ -49,25 +40,17 @@ const LeafletMap = () => {
     queryFn: getCountries,
   });
 
-  const { data: chartData, refetch } = useQuery<EarthquakeData[]>({
-    queryKey: ["earthquake", id],
-    queryFn: () => getEarthquakesById(id),
-    enabled: !!id,
-  });
-
-  useEffect(() => {
-    if (id) {
-      refetch();
-    }
-  }, [id, refetch]);
-
   useEffect(() => {
     if (!isLoading && countries) {
       // Burada loading kontrolü yapıldı
-
+      console.log("countries", countries);
       dispatch(setCountries(countries));
     }
   }, [isLoading, countries, dispatch]); // Dependencies eklendi
+
+  console.log("selected city", selectedCity);
+  console.log("data", data);
+  console.log("selectedCountry", selectedCountry);
 
   const countryLat = useSelector(
     (state: RootState) => state.data?.location?.latitude
@@ -89,11 +72,24 @@ const LeafletMap = () => {
 
   function handleChangeChartDataByClickingMarker(city_id: string) {
     // Find the selected city by ID from searchCityDatas
-    dispatch(setChartData(chartData.recentEarthquakes));
+    const currentChartData = searchCityDatas?.filter(
+      (city) => city._id === city_id
+    );
+
+    // Check if we have valid data for the selected city
+    if (currentChartData && currentChartData.length > 0) {
+      const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
+
+      // Ensure recentEarthquakes is available before dispatching
+      if (recentEarthquakes) {
+        dispatch(setChartData(recentEarthquakes));
+      } else {
+        console.error("No earthquake data found for the selected city.");
+      }
+    } else {
+      console.error("City data not found for the given city_id:", city_id);
+    }
   }
-
-  console.log("chartData", chartData);
-
   if (searchCityDatas && searchCityDatas.length > 0 && !selectedCity) {
     return (
       <MapContainer
