@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position } from "../../types/types";
 import "./leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMapEvents,
+} from "react-leaflet";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -36,7 +42,7 @@ const LeafletMap = () => {
   );
   const selectedCity = useSelector(
     (state: RootState) => state.data.selectedCity
-  ); // Değişiklik burada
+  );
 
   const id = useSelector((state: RootState) => state.search._id);
 
@@ -53,38 +59,41 @@ const LeafletMap = () => {
     queryFn: getCountries,
   });
 
-  const { data: country, refetch } = useQuery<City[]>({
+  const {
+    data: country,
+    refetch,
+    isLoading: isLoadingCountry,
+  } = useQuery<City[]>({
     queryKey: ["cities", nationName],
     enabled: !!id,
   });
 
   useEffect(() => {
-    if (id) {
-      refetch();
-    }
+    refetch();
   }, [id, refetch]);
 
   console.log(country?.cities, "country cities");
 
   useEffect(() => {
-    if (country) {
-      const cities = country?.cities?.map((city: City) => ({
-        name: city.name,
-        location: city.location,
-        recentEarthquakes: city.recentEarthquakes,
-        _id: city._id,
-      }));
-      dispatch(setSearchData(cities));
+    if (!isLoadingCountry) {
+      if (country) {
+        const cities = country?.cities?.map((city: City) => ({
+          name: city.name,
+          location: city.location,
+          recentEarthquakes: city.recentEarthquakes,
+          _id: city._id,
+        }));
+        dispatch(setSearchData(cities));
+      }
     }
-  }, [country, dispatch]);
+  }, [country, dispatch, isLoadingCountry]);
 
   useEffect(() => {
     if (!isLoading && countries) {
-      // Burada loading kontrolü yapıldı
       console.log("countries", countries);
       dispatch(setCountries(countries));
     }
-  }, [isLoading, countries, dispatch]); // Dependencies eklendi
+  }, [isLoading, countries, dispatch]);
 
   console.log("selected city", selectedCity);
   console.log("data", data);
@@ -97,7 +106,6 @@ const LeafletMap = () => {
     (state: RootState) => state.data?.location?.longitude
   );
 
-  // Map reference
   const mapRef = useRef<any>(null);
 
   useEffect(() => {
@@ -109,16 +117,13 @@ const LeafletMap = () => {
   }, [countryLat, countryLng]);
 
   function handleChangeChartDataByClickingMarker(city_id: string) {
-    // Find the selected city by ID from searchCityDatas
     const currentChartData = searchCityDatas?.filter(
       (city) => city._id === city_id
     );
 
-    // Check if we have valid data for the selected city
     if (currentChartData && currentChartData.length > 0) {
       const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
 
-      // Ensure recentEarthquakes is available before dispatching
       if (recentEarthquakes) {
         dispatch(setChartData(recentEarthquakes));
       } else {
@@ -128,6 +133,17 @@ const LeafletMap = () => {
       console.error("City data not found for the given city_id:", city_id);
     }
   }
+
+  // Custom MapClickHandler to reset city selection on map click
+  const MapClickHandler = () => {
+    useMapEvents({
+      click: () => {
+        dispatch(setId(""));
+      },
+    });
+    return null;
+  };
+
   if (searchCityDatas && searchCityDatas.length > 0 && !selectedCity) {
     return (
       <MapContainer
@@ -137,6 +153,8 @@ const LeafletMap = () => {
         zoom={10}
         style={{ height: "100%", width: "100%" }}
       >
+        <MapClickHandler />{" "}
+        {/* Add click handler for resetting city selection */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -169,6 +187,8 @@ const LeafletMap = () => {
         zoom={10}
         style={{ height: "100%", width: "100%" }}
       >
+        <MapClickHandler />{" "}
+        {/* Add click handler for resetting city selection */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -183,7 +203,6 @@ const LeafletMap = () => {
             position={[scaleData?.epicenter?.lat, scaleData?.epicenter?.lng]}
           >
             <Popup key={scaleData._id}>
-              {/* You can add content for the Popup here */}
               <span>{`Magnitude: ${scaleData.magnitude}`}</span>
             </Popup>
           </Marker>
@@ -200,11 +219,11 @@ const LeafletMap = () => {
       zoom={10}
       style={{ height: "100%", width: "100%" }}
     >
+      <MapClickHandler /> {/* Add click handler for resetting city selection */}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
       {data?.map((country) =>
         country?.cities
           ?.filter((city) => city._id === selectedCity)
@@ -217,7 +236,7 @@ const LeafletMap = () => {
                   dispatch(setId(city._id));
                 },
               }}
-              position={[city?.location?.latitude, city?.location?.longitude]} // location yerine doğrudan lat ve lng kullanıldı
+              position={[city?.location?.latitude, city?.location?.longitude]}
             >
               <Popup>
                 {city?.recentEarthquakes?.map(
