@@ -8,7 +8,7 @@ import {
   TileLayer,
   useMapEvents,
 } from "react-leaflet";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
@@ -46,6 +46,8 @@ const LeafletMap = () => {
 
   const id = useSelector((state: RootState) => state.search._id);
 
+  const [ids, setIds] = useState("");
+
   const searchCityDatas = useSelector(
     (state: RootState) => state.data.searchCityDatas
   );
@@ -69,8 +71,9 @@ const LeafletMap = () => {
   });
 
   useEffect(() => {
+    dispatch(setId(ids));
     refetch();
-  }, [id, refetch]);
+  }, [id, refetch, dispatch, ids]);
 
   console.log(country?.cities, "country cities");
 
@@ -116,23 +119,32 @@ const LeafletMap = () => {
     }
   }, [countryLat, countryLng]);
 
-  function handleChangeChartDataByClickingMarker(city_id: string) {
-    const currentChartData = searchCityDatas?.filter(
-      (city) => city._id === city_id
-    );
+  const handleChangeChartDataByClickingMarker = useCallback(
+    (city_id: string) => {
+      const currentChartData = searchCityDatas?.filter(
+        (city) => city._id === city_id
+      );
 
-    if (currentChartData && currentChartData.length > 0) {
-      const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
+      if (currentChartData && currentChartData.length > 0) {
+        const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
 
-      if (recentEarthquakes) {
-        dispatch(setChartData(recentEarthquakes));
+        if (recentEarthquakes) {
+          dispatch(setChartData(recentEarthquakes));
+        } else {
+          console.error("No earthquake data found for the selected city.");
+        }
       } else {
-        console.error("No earthquake data found for the selected city.");
+        console.error("City data not found for the given city_id:", city_id);
       }
-    } else {
-      console.error("City data not found for the given city_id:", city_id);
+    },
+    [searchCityDatas, dispatch] // Memoize based on searchCityDatas and dispatch
+  );
+
+  useEffect(() => {
+    if (id) {
+      handleChangeChartDataByClickingMarker(id);
     }
-  }
+  }, [id, handleChangeChartDataByClickingMarker]);
 
   // Custom MapClickHandler to reset city selection on map click
   const MapClickHandler = () => {
@@ -165,6 +177,7 @@ const LeafletMap = () => {
             icon={newIcon}
             eventHandlers={{
               click: () => {
+                setIds(city._id);
                 handleChangeChartDataByClickingMarker(city._id);
                 dispatch(setId(city._id));
               },
@@ -233,6 +246,7 @@ const LeafletMap = () => {
               icon={newIcon}
               eventHandlers={{
                 click: () => {
+                  setIds(city._id);
                   handleChangeChartDataByClickingMarker(city._id);
                   dispatch(setId(city._id));
                 },

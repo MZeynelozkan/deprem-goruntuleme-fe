@@ -1,5 +1,5 @@
 import { ChartContainer } from "@/components/ui/chart";
-import { setChartData } from "@/slices/dataSlice";
+import { setChartData, setSearchData } from "@/slices/dataSlice";
 import { RootState } from "@/store/store";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import { Bar } from "recharts";
 import { chartConfig } from "@/config/chartConfig";
 import LeftSideBar from "./LeftSideBar";
 import { Button } from "../ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { updateNewEarthQuakeData } from "@/services/postAPI";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,8 @@ import { Input } from "../ui/input";
 import { earthquakeSchema } from "@/lib/validations";
 import { UpdatedCity } from "@/types/types";
 import DeleteSideBar from "../addNewPageComponents/DeleteSideBar";
+import { getCountries } from "@/services/getAPI";
+import { setId } from "@/slices/searchSlice";
 
 type EarthquakeFormInputs = z.infer<typeof earthquakeSchema>;
 
@@ -36,6 +38,12 @@ const RightSidebar = () => {
     (state: RootState) => state.search.currentCountry
   );
 
+  const { data: country } = useQuery<any[]>({
+    queryKey: ["cities", currentCountry],
+  });
+
+  console.log(country, "data");
+
   const { mutate } = useMutation({
     mutationFn: (data: {
       update: { date: string; depth: number; magnitude: number }[];
@@ -44,6 +52,9 @@ const RightSidebar = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cities", currentCountry] });
       setUpdateState(false);
+      reset();
+      dispatch(setSearchData([...country.cities]));
+      dispatch(setId(""));
     },
   });
 
@@ -59,13 +70,12 @@ const RightSidebar = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<EarthquakeFormInputs>({
     resolver: zodResolver(earthquakeSchema),
   });
 
   const onSubmit = (formData: EarthquakeFormInputs) => {
-    console.log("Form Data:", formData);
-
     const filteredCharDatas = charDatas.map((city) => ({
       date: city.date || "",
       depth: city.depth || 0,
@@ -79,9 +89,7 @@ const RightSidebar = () => {
       update: updatedEarthquakes,
     };
 
-    console.log("Updated City:", updatedCity);
-
-    mutate(updatedCity); // Bu noktada tür uyuşmazlığı olmamalı
+    mutate(updatedCity);
   };
 
   // Transform the recentEarthquakes data for the selected city
