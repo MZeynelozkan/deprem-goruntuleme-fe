@@ -137,7 +137,7 @@ const LeafletMap = () => {
         console.error("City data not found for the given city_id:", city_id);
       }
     },
-    [searchCityDatas, dispatch] // Memoize based on searchCityDatas and dispatch
+    [searchCityDatas, dispatch]
   );
 
   useEffect(() => {
