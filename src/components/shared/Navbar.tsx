@@ -59,9 +59,12 @@ const Navbar = () => {
 
   return (
     <div className="flex border-2 border-gray-400	 w-full max-w-[1000px] absolute left-1/2 top-5 transform -translate-x-1/2  z-10 rounded-xl items-center justify-between gap-4 py-5 px-7 bg-white">
-      <h1 className="font-extrabold text-3xl text-slate-600">
-        Earthquakes Stats
-      </h1>
+      <div className="flex items-center space-x-5">
+        <img alt="logo" src="/earthquake.png" width={50} height={50} />
+        <h1 className="font-extrabold text-3xl text-slate-600">
+          Earthquakes Stats
+        </h1>
+      </div>
       <div className="flex items-center justify-between w-[450px]">
         <Link
           className="text-blue-300 font-bold hover:text-slate-900"

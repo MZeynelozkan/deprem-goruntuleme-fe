@@ -28,7 +28,7 @@ const position: Position = [51.505, -0.09];
 
 const LeafletMap = () => {
   const newIcon = new Icon({
-    iconUrl: "/among-us.png",
+    iconUrl: "/earthquake.png",
     iconSize: [40, 40],
     iconAnchor: [22, 41],
     popupAnchor: [0, -40],
