@@ -58,7 +58,7 @@ const DeleteSideBar = ({
   return (
     <div>
       {earthquake ? (
-        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center p-8 gap-14 absolute top-[250px] right-5 rounded-lg max-sm:hidden">
+        <div className="h-[400px] bg-white w-[300px] flex flex-col items-center p-8 gap-14 absolute absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
           <div className="w-full grid grid-cols-3 gap-4 text-center font-bold border-b pb-2">
             <p>Date</p>
             <p>Magnitude</p>

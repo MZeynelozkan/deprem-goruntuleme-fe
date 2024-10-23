@@ -114,7 +114,7 @@ const RightSidebar = () => {
   return (
     <>
       {!updateState && !showState && (
-        <div className="h-[600px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-[250px] right-5 rounded-lg max-sm:hidden">
+        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
           <LeftSideBar />
           {charDatas && charDatas.length > 0 && (
             <ChartContainer config={chartConfig} className="w-full">
