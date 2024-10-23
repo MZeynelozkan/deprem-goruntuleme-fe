@@ -65,13 +65,19 @@ const Navbar = () => {
         <h1 className="font-extrabold text-3xl text-slate-600">
           Earthquakes Stats
         </h1>
+        <Link
+          className="text-blue-300 font-bold hover:text-slate-900"
+          to="/show-latest-earthquakes"
+        >
+          Depremler
+        </Link>
       </div>
       <div className="flex items-center justify-between w-[450px]">
         <Link
-          className="text-blue-300 font-bold hover:text-slate-900 max-sm:hidden"
+          className="text-blue-300 font-bold hover:text-slate-900 max-sm:hidden text-center"
           to="/add-new-country-and-city"
         >
-          Veri Ekle
+          Yeni Sehir Ekle
         </Link>
         <div className="relative w-full max-w-[350px] rounded-sm px-3">
           <input

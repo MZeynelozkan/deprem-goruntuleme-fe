@@ -85,3 +85,23 @@ export async function getEarthquakesById(id: string) {
     console.log("Error:", error);
   }
 }
+
+export async function getAllEarthquakesWithCityName() {
+  try {
+    const url = `${URL}all-earth-quakes`;
+    const req = await axios.get(url);
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
+export async function getAverageEarthquakeData() {
+  try {
+    const url = `${URL}average`;
+    const req = await axios.get(url);
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}

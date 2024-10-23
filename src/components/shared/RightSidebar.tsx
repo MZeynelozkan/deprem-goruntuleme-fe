@@ -51,6 +51,8 @@ const RightSidebar = () => {
     }) => updateNewEarthQuakeData(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cities", currentCountry] });
+      queryClient.invalidateQueries({ queryKey: ["earthquakes"] });
+      queryClient.invalidateQueries({ queryKey: ["average"] });
       setUpdateState(false);
       reset();
       dispatch(setSearchData([...country.cities]));

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema } from "@/lib/validations";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postNewEarthQuakeData } from "@/services/postAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -52,6 +52,8 @@ const RightSideBar = () => {
 
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   const { mutate } = useMutation<
     void, // Dönen veri tipi
     unknown, // Hata tipi
@@ -65,6 +67,8 @@ const RightSideBar = () => {
   >({
     mutationFn: (data) => postNewEarthQuakeData(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["earthquakes"] });
+      queryClient.invalidateQueries({ queryKey: ["average"] });
       navigate("/");
     },
   });
