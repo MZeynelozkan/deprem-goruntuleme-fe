@@ -50,6 +50,10 @@ const RightSideBar = () => {
   ) as DataFromRedux; // Redux'dan alınan veri
   console.log("data", data);
 
+  const country = useSelector(
+    (state: RootState) => state.search.currentCountry
+  );
+
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
@@ -69,6 +73,7 @@ const RightSideBar = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["earthquakes"] });
       queryClient.invalidateQueries({ queryKey: ["average"] });
+      queryClient.invalidateQueries({ queryKey: ["cities", country] });
       navigate("/");
     },
   });
