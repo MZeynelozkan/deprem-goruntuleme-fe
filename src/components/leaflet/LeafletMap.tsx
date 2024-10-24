@@ -14,7 +14,7 @@ import { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
 import { getCountries } from "@/services/getAPI";
 import { setChartData, setCountries, setSearchData } from "@/slices/dataSlice";
-import { setId } from "@/slices/searchSlice";
+import { setCurrentCountry, setId } from "@/slices/searchSlice";
 import { Icon } from "leaflet";
 
 interface City {
@@ -42,6 +42,10 @@ const LeafletMap = () => {
   );
   const selectedCity = useSelector(
     (state: RootState) => state.data.selectedCity
+  );
+
+  const rectangleCities = useSelector(
+    (state: RootState) => state.data.rectangleCities
   );
 
   const id = useSelector((state: RootState) => state.search._id);
@@ -75,8 +79,6 @@ const LeafletMap = () => {
     refetch();
   }, [id, refetch, dispatch, ids]);
 
-  console.log(country?.cities, "country cities");
-
   useEffect(() => {
     if (!isLoadingCountry) {
       if (country) {
@@ -98,10 +100,6 @@ const LeafletMap = () => {
     }
   }, [isLoading, countries, dispatch]);
 
-  console.log("selected city", selectedCity);
-  console.log("data", data);
-  console.log("selectedCountry", selectedCountry);
-
   const countryLat = useSelector(
     (state: RootState) => state.data?.location?.latitude
   );
@@ -121,23 +119,40 @@ const LeafletMap = () => {
 
   const handleChangeChartDataByClickingMarker = useCallback(
     (city_id: string) => {
-      const currentChartData = searchCityDatas?.filter(
-        (city) => city._id === city_id
-      );
+      if (searchCityDatas) {
+        const currentChartData = searchCityDatas?.filter(
+          (city) => city._id === city_id
+        );
 
-      if (currentChartData && currentChartData.length > 0) {
-        const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
+        if (currentChartData && currentChartData.length > 0) {
+          const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
 
-        if (recentEarthquakes) {
-          dispatch(setChartData(recentEarthquakes));
+          if (recentEarthquakes) {
+            dispatch(setChartData(recentEarthquakes));
+          } else {
+            console.error("No earthquake data found for the selected city.");
+          }
         } else {
-          console.error("No earthquake data found for the selected city.");
+          console.error("City data not found for the given city_id:", city_id);
         }
-      } else {
-        console.error("City data not found for the given city_id:", city_id);
+      }
+      if (rectangleCities) {
+        const currentChartData = rectangleCities?.filter(
+          (city) => city._id === city_id
+        );
+        if (currentChartData && currentChartData.length > 0) {
+          const recentEarthquakes = currentChartData[0]?.recentEarthquakes;
+          if (recentEarthquakes) {
+            dispatch(setChartData(recentEarthquakes));
+          } else {
+            console.error("No earthquake data found for the selected city.");
+          }
+        } else {
+          console.error("City data not found for the given city_id:", city_id);
+        }
       }
     },
-    [searchCityDatas, dispatch]
+    [searchCityDatas, dispatch, rectangleCities]
   );
 
   useEffect(() => {
@@ -156,6 +171,42 @@ const LeafletMap = () => {
     });
     return null;
   };
+
+  if (rectangleCities && rectangleCities.length > 0) {
+    return (
+      <MapContainer
+        ref={mapRef}
+        scrollWheelZoom={true}
+        center={position}
+        zoom={10}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <MapClickHandler />
+
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {rectangleCities.map((city) => (
+          <Marker
+            icon={newIcon}
+            eventHandlers={{
+              click: () => {
+                setIds(city._id);
+                handleChangeChartDataByClickingMarker(city._id);
+                dispatch(setCurrentCountry(city.country.name));
+                dispatch(setId(city._id));
+              },
+            }}
+            key={city._id}
+            position={[city?.location?.latitude, city?.location?.longitude]}
+          >
+            <Popup key={city._id}>{city.name}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    );
+  }
 
   if (searchCityDatas && searchCityDatas.length > 0 && !selectedCity) {
     return (

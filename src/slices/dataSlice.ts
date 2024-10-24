@@ -35,6 +35,7 @@ interface DataState {
   scaleDatas: any[]; // New property to hold scale data
   searchCityDatas?: any[];
   chartDatas: any[];
+  rectangleCities?: any[];
 }
 
 // Initial state with empty countries array and no selected country or city
@@ -48,6 +49,7 @@ const initialState: DataState = {
   scaleDatas: [], // Initialize with an empty array
   searchCityDatas: [],
   chartDatas: [],
+  rectangleCities: [],
 };
 
 const dataSlice = createSlice({
@@ -57,6 +59,10 @@ const dataSlice = createSlice({
     // Set the entire data (list of countries)
     setData: (state, action: PayloadAction<Country[]>) => {
       state.data = action.payload;
+    },
+
+    setRectangleCities: (state, action: PayloadAction<any[]>) => {
+      state.rectangleCities = action.payload;
     },
 
     // Set the entire countries array
@@ -121,6 +127,7 @@ const dataSlice = createSlice({
       state.scale = undefined;
       state.scaleDatas = [];
       state.data = [];
+      state.rectangleCities = [];
     },
   },
 });
@@ -137,6 +144,7 @@ export const {
   setScaleDatas,
   setSearchData,
   setChartData,
+  setRectangleCities,
 } = dataSlice.actions;
 
 // Export the reducer

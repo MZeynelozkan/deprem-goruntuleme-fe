@@ -105,3 +105,13 @@ export async function getAverageEarthquakeData() {
     console.log("Error:", error);
   }
 }
+
+export async function getAllCities() {
+  try {
+    const url = `${URL}`;
+    const req = await axios.get(url);
+    return req.data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}

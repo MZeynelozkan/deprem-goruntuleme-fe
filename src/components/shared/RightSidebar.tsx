@@ -26,6 +26,7 @@ import { UpdatedCity } from "@/types/types";
 import DeleteSideBar from "../addNewPageComponents/DeleteSideBar";
 import { getCountries } from "@/services/getAPI";
 import { setId } from "@/slices/searchSlice";
+import { useLocation, useNavigate } from "react-router";
 
 type EarthquakeFormInputs = z.infer<typeof earthquakeSchema>;
 
@@ -38,11 +39,15 @@ const RightSidebar = () => {
     (state: RootState) => state.search.currentCountry
   );
 
+  const rectangleCities = useSelector(
+    (state: RootState) => state.data.rectangleCities
+  );
+
   const { data: country } = useQuery<any[]>({
     queryKey: ["cities", currentCountry],
   });
 
-  console.log(country, "data");
+  const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: (data: {
@@ -139,7 +144,7 @@ const RightSidebar = () => {
               </ResponsiveContainer>
             </ChartContainer>
           )}
-          {cityId && (
+          {cityId && !rectangleCities && (
             <div className="flex items-center gap-2">
               <Button onClick={() => setUpdateState(!updateState)}>
                 Update
@@ -149,6 +154,9 @@ const RightSidebar = () => {
               </Button>
             </div>
           )}
+          <Button onClick={() => navigate("/draw-rectangle")}>
+            Dikdortgen Ciz
+          </Button>
         </div>
       )}
 

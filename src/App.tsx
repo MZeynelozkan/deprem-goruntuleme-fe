@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 import Loader from "./components/loader/Loader";
 import ShowAllLatestEarthquakes from "./pages/showAllLatestEarthquakes/ShowAllLatestEarthquakes";
 import { Toaster } from "react-hot-toast";
+import DrawRectanglePage from "./pages/drawRectangle/DrawRectanglePage";
 
 // Dinamik import ile bileşenleri yüklüyoruz
 const MainPage = lazy(() => import("./pages/mainPage/MainPage"));
@@ -23,6 +24,7 @@ function App() {
                 path="/add-new-country-and-city"
                 element={<AddNewPage />}
               />
+              <Route path="/draw-rectangle" element={<DrawRectanglePage />} />
             </Route>
             <Route
               path="/show-latest-earthquakes"
