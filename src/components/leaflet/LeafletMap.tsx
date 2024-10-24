@@ -119,7 +119,7 @@ const LeafletMap = () => {
 
   const handleChangeChartDataByClickingMarker = useCallback(
     (city_id: string) => {
-      if (searchCityDatas) {
+      if (searchCityDatas && searchCityDatas.length > 0) {
         const currentChartData = searchCityDatas?.filter(
           (city) => city._id === city_id
         );
@@ -135,8 +135,7 @@ const LeafletMap = () => {
         } else {
           console.error("City data not found for the given city_id:", city_id);
         }
-      }
-      if (rectangleCities) {
+      } else if (rectangleCities && rectangleCities.length > 0) {
         const currentChartData = rectangleCities?.filter(
           (city) => city._id === city_id
         );

@@ -121,7 +121,7 @@ const RightSidebar = () => {
   return (
     <>
       {!updateState && !showState && (
-        <div className="h-[500px] bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
+        <div className="h-fit bg-white w-[300px] flex flex-col items-center justify-center p-8 gap-14 absolute top-1/2 -translate-y-1/2 right-5 rounded-lg max-sm:hidden">
           <LeftSideBar />
           {charDatas && charDatas.length > 0 && (
             <ChartContainer config={chartConfig} className="w-full">
@@ -144,7 +144,7 @@ const RightSidebar = () => {
               </ResponsiveContainer>
             </ChartContainer>
           )}
-          {cityId && !rectangleCities && (
+          {cityId && (
             <div className="flex items-center gap-2">
               <Button onClick={() => setUpdateState(!updateState)}>
                 Update
@@ -154,6 +154,7 @@ const RightSidebar = () => {
               </Button>
             </div>
           )}
+
           <Button onClick={() => navigate("/draw-rectangle")}>
             Dikdortgen Ciz
           </Button>
