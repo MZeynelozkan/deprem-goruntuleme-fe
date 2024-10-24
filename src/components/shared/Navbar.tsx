@@ -18,7 +18,7 @@ const Navbar = () => {
   // useQuery ile şehirleri alıyoruz, başlangıçta disabled.
   const { data: country, refetch } = useQuery({
     queryKey: ["cities", data],
-    queryFn: () => getCitiesByCountry(search),
+    queryFn: () => getCitiesByCountry(data),
   });
 
   // Search input değişimini yönetiyoruz
